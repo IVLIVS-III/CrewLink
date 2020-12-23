@@ -108,6 +108,10 @@ const store = new Store<ISettings>({
 			type: 'string',
 			default: 'top'
 		},
+		adjustLiveOnDead: {
+			type: 'number',
+			default: 1,
+		}
 	}
 });
 
@@ -177,7 +181,7 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 			action: store.store
 		});
 	}, []);
-	
+
 	let overlay = remote.getGlobal('overlay');
 	if (overlay) {
 		overlay.webContents.send('overlaySettings', settings);
@@ -231,10 +235,10 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 	};
 
 	const setMouseShortcut = (ev: React.MouseEvent<HTMLInputElement>, shortcut: string) => {
-		if(ev.button > 2){
+		if (ev.button > 2) {
 			// this makes our button start at 1 instead of 0
 			// React Mouse event starts at 0, but IOHooks starts at 1
-			const k = `MouseButton${ev.button+1}`;
+			const k = `MouseButton${ev.button + 1}`;
 			setSettings({
 				type: 'setOne',
 				action: [shortcut, k]
@@ -308,8 +312,8 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 			</div>
 			{settings.pushToTalk &&
 				<div className="form-control m" style={{ color: '#f1c40f' }}>
-					<input spellCheck={false} type="text" value={settings.pushToTalkShortcut} readOnly 
-						onMouseDown={(ev)=> setMouseShortcut(ev, 'pushToTalkShortcut')} 
+					<input spellCheck={false} type="text" value={settings.pushToTalkShortcut} readOnly
+						onMouseDown={(ev) => setMouseShortcut(ev, 'pushToTalkShortcut')}
 						onKeyDown={(ev) => setShortcut(ev, 'pushToTalkShortcut')} />
 				</div>
 			}
@@ -348,9 +352,9 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 						action: ['overlayPosition', ev.target.value]
 					});
 				}}>
-				  <option value="top" selected={settings.overlayPosition == "top"}>Top Center</option>
-				  <option value="bottom_left" selected={settings.overlayPosition == "bottom_left"}>Bottom Left</option>
-				</select>			
+					<option value="top" selected={settings.overlayPosition == "top"}>Top Center</option>
+					<option value="bottom_left" selected={settings.overlayPosition == "bottom_left"}>Bottom Left</option>
+				</select>
 			</div>
 			<div className="form-control m" style={{ color: '#f72f5e', paddingTop: "10px" }} onClick={() => setSettings({
 				type: 'setOne',
@@ -363,6 +367,18 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 				<span>
 					Exit to apply changes
 				</span>
+			</div>
+			<div className="form-control m" style={{ color: '#ffa500', textAlign: "center" }} >
+				<label>Live Players Vol. when Dead</label>
+				<br />
+				<input type="range" value={(settings.adjustLiveOnDead * 100)}
+					onChange={(ev: React.FormEvent<HTMLInputElement>) =>
+						setSettings({
+							type: 'setOne',
+							action: ['adjustLiveOnDead', (ev.currentTarget.valueAsNumber / 100)]
+						})
+					}
+					readOnly />
 			</div>
 		</div>
 	</div>;

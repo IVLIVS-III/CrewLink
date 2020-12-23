@@ -35,9 +35,10 @@ export default function App() {
 		hideCode: false,
 		enableSpatialAudio: true,
 		compactOverlay: false,
-		overlayPosition: 'top'
+		overlayPosition: 'top',
+		adjustLiveOnDead: 1
 	});
-		
+
 
 	useEffect(() => {
 		const onOpen = (_: Electron.IpcRendererEvent, isOpen: boolean) => {
@@ -46,7 +47,7 @@ export default function App() {
 			if (overlay) {
 				overlay.webContents.send('overlayState', 'MENU');
 			}
-	
+
 		};
 		const onState = (_: Electron.IpcRendererEvent, newState: AmongUsState) => {
 			setGameState(newState);
@@ -78,12 +79,12 @@ export default function App() {
 
 	let page;
 	switch (state) {
-	case AppState.MENU:
-		page = <Menu errored={errored} />;
-		break;
-	case AppState.VOICE:
-		page = <Voice />;
-		break;
+		case AppState.MENU:
+			page = <Menu errored={errored} />;
+			break;
+		case AppState.VOICE:
+			page = <Voice />;
+			break;
 	}
 	return (
 		<GameStateContext.Provider value={gameState}>

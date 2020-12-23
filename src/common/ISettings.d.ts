@@ -15,4 +15,5 @@ export interface ISettings {
 	enableSpatialAudio: boolean;
 	compactOverlay: boolean;
 	overlayPosition: string;
+	adjustLiveOnDead: number;
 }
