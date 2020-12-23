@@ -40,6 +40,7 @@ interface ConnectionStuff {
 	stream?: MediaStream;
 	pushToTalk: boolean;
 	deafened: boolean;
+	muted: boolean;
 }
 
 interface OtherTalking {
@@ -69,7 +70,7 @@ function calculateVoiceAudio(state: AmongUsState, settings: ISettings, me: Playe
 	panPos[0] = Math.min(999, Math.max(-999, panPos[0]));
 	panPos[1] = Math.min(999, Math.max(-999, panPos[1]));
 	if (other.inVent) {
-		if(me.inVent) {
+		if (me.inVent) {
 			gain.gain.value = 1;
 			pan.positionX.setValueAtTime(panPos[0], audioContext.currentTime);
 			pan.positionY.setValueAtTime(panPos[1], audioContext.currentTime);
@@ -142,6 +143,7 @@ const Voice: React.FC = function () {
 	const [audioConnected, setAudioConnected] = useState<AudioConnected>({});
 
 	const [deafenedState, setDeafened] = useState(false);
+	const [mutedState, setMuted] = useState(false);
 	const [connected, setConnected] = useState(false);
 
 	let joinedLobby = '';
@@ -173,9 +175,11 @@ const Voice: React.FC = function () {
 		}
 	}, [gameState.gameState]);
 
+	// const [audioContext] = useState<AudioContext>(() => new AudioContext());
 	const connectionStuff = useRef<Partial<ConnectionStuff>>({
 		pushToTalk: settings.pushToTalk,
 		deafened: false,
+		muted: false,
 	});
 
 	function disconnectPeers() {
@@ -248,8 +252,17 @@ const Voice: React.FC = function () {
 
 			ipcRenderer.on('toggleDeafen', () => {
 				connectionStuff.current.deafened = !connectionStuff.current.deafened;
-				stream.getAudioTracks()[0].enabled = !connectionStuff.current.deafened;
+				stream.getAudioTracks()[0].enabled = !connectionStuff.current.deafened && !connectionStuff.current.muted;
 				setDeafened(connectionStuff.current.deafened);
+			});
+			ipcRenderer.on('toggleMute', () => {
+				connectionStuff.current.muted = !connectionStuff.current.muted;
+				if (connectionStuff.current.deafened) {
+					connectionStuff.current.deafened = false;
+					connectionStuff.current.muted = false;
+				}
+				stream.getAudioTracks()[0].enabled = !connectionStuff.current.muted && !connectionStuff.current.deafened;
+				setMuted(connectionStuff.current.muted);
 			});
 			ipcRenderer.on('pushToTalk', (_: unknown, pressing: boolean) => {
 				if (!connectionStuff.current.pushToTalk) return;
@@ -506,7 +519,7 @@ const Voice: React.FC = function () {
 		<div className="root">
 			<div className="top">
 				{myPlayer &&
-					<Avatar deafened={deafenedState} player={myPlayer} borderColor={connected ? '#2ecc71' : '#c0392b'} talking={talking} isAlive={!myPlayer.isDead} size={100} />
+					<Avatar deafened={deafenedState} muted={mutedState} player={myPlayer} borderColor={connected ? '#2ecc71' : '#c0392b'} talking={talking} isAlive={!myPlayer.isDead} size={100} />
 					// <div className="avatar" style={{ borderColor: talking ? '#2ecc71' : 'transparent' }}>
 					// 	<Canvas src={alive} color={playerColors[myPlayer.colorId][0]} shadow={playerColors[myPlayer.colorId][1]} />
 					// </div>

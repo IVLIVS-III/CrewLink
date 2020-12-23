@@ -28,6 +28,7 @@ export default function App() {
 		serverURL: 'https://crewl.ink',
 		pushToTalkShortcut: 'V',
 		deafenShortcut: 'RControl',
+		muteShortcut: 'RAlt',
 		offsets: {
 			version: '',
 			data: ''

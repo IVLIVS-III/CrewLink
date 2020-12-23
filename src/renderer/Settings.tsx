@@ -79,6 +79,10 @@ const store = new Store<ISettings>({
 			type: 'string',
 			default: 'RControl'
 		},
+		muteShortcut: {
+			type: 'string',
+			default: 'RAlt'
+		},
 		offsets: {
 			type: 'object',
 			properties: {
@@ -319,6 +323,13 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 					onMouseDown={(ev) => setMouseShortcut(ev, 'pushToTalkShortcut')}
 					onKeyDown={(ev) => setShortcut(ev, 'pushToTalkShortcut')} />
 			</div>
+			{!settings.pushToTalk && <div className="form-control l m" style={{ color: '#2ecc71' }}>
+				<label>Mute Shortcut</label>
+				<input style={{ marginTop: 4 }} spellCheck={false} type="text" value={settings.muteShortcut} readOnly
+					onMouseDown={(ev) => setMouseShortcut(ev, 'muteShortcut')}
+					onKeyDown={(ev) => setShortcut(ev, 'muteShortcut')} />
+			</div>
+			}
 			<div className="form-control l m" style={{ color: '#2ecc71' }}>
 				<label>Deafen Shortcut</label>
 				<input spellCheck={false} type="text" value={settings.deafenShortcut} readOnly onKeyDown={(ev) => setShortcut(ev, 'deafenShortcut')} />
@@ -375,7 +386,7 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 			<div className='settings-alert' style={{ display: unsaved ? 'flex' : 'none' }}>
 				<span>
 					Close Settings to apply changes
-				</span>
+					</span>
 			</div>
 			<div className="form-control m" style={{ color: '#ffa500', textAlign: "center" }} >
 				<label>Live Players Vol. when Dead</label>
@@ -390,7 +401,7 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 					readOnly />
 			</div>
 		</div>
-	</div>;
+	</div >;
 };
 
 export default Settings;
