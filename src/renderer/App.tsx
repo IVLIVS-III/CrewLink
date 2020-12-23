@@ -33,6 +33,7 @@ export default function App() {
 			data: ''
 		},
 		hideCode: false,
+		hideVoiceServer: false,
 		enableSpatialAudio: true,
 		compactOverlay: false,
 		overlayPosition: 'top',
