@@ -325,7 +325,7 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 			</div>
 			{!settings.pushToTalk && <div className="form-control l m" style={{ color: '#2ecc71' }}>
 				<label>Mute Shortcut</label>
-				<input style={{ marginTop: 4 }} spellCheck={false} type="text" value={settings.muteShortcut} readOnly
+				<input spellCheck={false} type="text" value={settings.muteShortcut} readOnly
 					onMouseDown={(ev) => setMouseShortcut(ev, 'muteShortcut')}
 					onKeyDown={(ev) => setShortcut(ev, 'muteShortcut')} />
 			</div>
