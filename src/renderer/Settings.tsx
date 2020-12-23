@@ -211,6 +211,7 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 	}, [_]);
 
 	const setShortcut = (ev: React.KeyboardEvent<HTMLInputElement>, shortcut: string) => {
+
 		let k = ev.key;
 		if (k.length === 1) k = k.toUpperCase();
 		else if (k.startsWith('Arrow')) k = k.substring(5);
@@ -222,6 +223,18 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 		if (/^[0-9A-Z]$/.test(k) || /^F[0-9]{1,2}$/.test(k) ||
 			keys.has(k)
 		) {
+			setSettings({
+				type: 'setOne',
+				action: [shortcut, k]
+			});
+		}
+	};
+
+	const setMouseShortcut = (ev: React.MouseEvent<HTMLInputElement>, shortcut: string) => {
+		if(ev.button > 2){
+			// this makes our button start at 1 instead of 0
+			// React Mouse event starts at 0, but IOHooks starts at 1
+			const k = `MouseButton${ev.button+1}`;
 			setSettings({
 				type: 'setOne',
 				action: [shortcut, k]
@@ -295,7 +308,9 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 			</div>
 			{settings.pushToTalk &&
 				<div className="form-control m" style={{ color: '#f1c40f' }}>
-					<input spellCheck={false} type="text" value={settings.pushToTalkShortcut} readOnly onKeyDown={(ev) => setShortcut(ev, 'pushToTalkShortcut')} />
+					<input spellCheck={false} type="text" value={settings.pushToTalkShortcut} readOnly 
+						onMouseDown={(ev)=> setMouseShortcut(ev, 'pushToTalkShortcut')} 
+						onKeyDown={(ev) => setShortcut(ev, 'pushToTalkShortcut')} />
 				</div>
 			}
 			<div className="form-control l m" style={{ color: '#2ecc71' }}>
