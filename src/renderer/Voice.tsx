@@ -7,6 +7,7 @@ import Peer from 'simple-peer';
 import { ipcRenderer, remote } from 'electron';
 import VAD from './vad';
 import { ISettings } from '../common/ISettings';
+import { validatePeerConfig } from './validatePeerConfig';
 
 export interface ExtendedAudioElement extends HTMLAudioElement {
 	setSinkId: (sinkId: string) => Promise<void>;
@@ -53,6 +54,26 @@ interface OtherDead {
 
 interface AudioConnected {
 	[peer: string]: boolean; // isConnected
+}
+
+interface ICEServer {
+	url: string,
+	username: string | undefined,
+	credential: string | undefined,
+}
+
+interface PeerConfig {
+	forceRelayOnly: Boolean,
+	stunServers: ICEServer[],
+	turnServers: ICEServer[]
+}
+
+const DEFAULT_ICE_CONFIG: RTCConfiguration = {
+	iceServers: [
+		{
+			urls: 'stun:stun.l.google.com:19302'
+		}
+	]
 }
 
 function calculateVoiceAudio(state: AmongUsState, settings: ISettings, me: Player, other: Player, gain: GainNode, pan: PannerNode, muffle: BiquadFilterNode): void {
@@ -215,9 +236,37 @@ const Voice: React.FC = function () {
 		socket.on('connect', () => {
 			setConnected(true);
 		});
+
 		socket.on('disconnect', () => {
 			setConnected(false);
 		});
+
+		let iceConfig: RTCConfiguration = DEFAULT_ICE_CONFIG;
+		socket.on('peerConfig', (peerConfig: PeerConfig) => {
+			if (!validatePeerConfig(peerConfig)) {
+				alert(`Server sent a malformed peer config. Default config will be used.${validatePeerConfig.errors ?
+					` See errors below:\n${validatePeerConfig.errors.map(error => error.dataPath + ' ' + error.message).join('\n')}` : ``
+					}`);
+				return;
+			}
+
+			if (peerConfig.forceRelayOnly && !peerConfig.turnServers) {
+				alert(`Server has forced relay mode enabled but provides no relay servers. Default config will be used.`);
+				return;
+			}
+
+			iceConfig = {
+				iceTransportPolicy: peerConfig.forceRelayOnly ? 'relay' : 'all',
+				iceServers: [...(peerConfig.stunServers || []), ...(peerConfig.turnServers || [])]
+					.map((server) => {
+						return {
+							urls: server.url,
+							username: server.username,
+							credential: server.credential
+						}
+					})
+			};
+		})
 
 		// Initialize variables
 		let audioListener: {
@@ -318,13 +367,9 @@ const Voice: React.FC = function () {
 			setConnect({ connect });
 			function createPeerConnection(peer: string, initiator: boolean) {
 				const connection = new Peer({
-					stream, initiator, config: {
-						iceServers: [
-							{
-								'urls': 'stun:stun.l.google.com:19302'
-							}
-						]
-					}
+					stream,
+					initiator,
+					config: iceConfig
 				});
 
 				let retries = 0;
