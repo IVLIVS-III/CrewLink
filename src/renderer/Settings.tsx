@@ -166,7 +166,7 @@ function URLInput({ initialURL, onValidURL }: URLInputProps) {
 	}, [initialURL]);
 
 	function onChange(event: React.ChangeEvent<HTMLInputElement>) {
-		let eventValue = event.target.value.trim();
+		const eventValue = event.target.value.trim();
 
 		setCurrentURL(eventValue);
 
@@ -192,7 +192,7 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 		});
 	}, []);
 
-	let overlay = remote.getGlobal('overlay');
+	const overlay = remote.getGlobal('overlay');
 	if (overlay) {
 		overlay.webContents.send('overlaySettings', settings);
 	}
@@ -386,7 +386,7 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 			<div className='settings-alert' style={{ display: unsaved ? 'flex' : 'none' }}>
 				<span>
 					Close Settings to apply changes
-					</span>
+				</span>
 			</div>
 			<div className="form-control m" style={{ color: '#ffa500', textAlign: "center" }} >
 				<label>Live Players Vol. when Dead</label>

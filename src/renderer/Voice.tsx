@@ -275,15 +275,15 @@ const Voice: React.FC = function () {
 			ac.createMediaStreamSource(stream);
 			audioListener = VAD(ac, ac.createMediaStreamSource(stream), undefined, {
 				onVoiceStart: () => {
-					setTalking(true)
-					let overlay = remote.getGlobal("overlay");
+					setTalking(true);
+					const overlay = remote.getGlobal("overlay");
 					if (overlay) {
 						overlay.webContents.send('overlayTalkingSelf', true);
 					}
 				},
 				onVoiceStop: () => {
-					setTalking(false)
-					let overlay = remote.getGlobal("overlay");
+					setTalking(false);
+					const overlay = remote.getGlobal("overlay");
 					if (overlay) {
 						overlay.webContents.send('overlayTalkingSelf', false);
 					}
@@ -297,7 +297,7 @@ const Voice: React.FC = function () {
 			const connect = (lobbyCode: string, playerId: number) => {
 				console.log('Connect called', lobbyCode, playerId);
 
-				let overlay = remote.getGlobal("overlay");
+				const overlay = remote.getGlobal("overlay");
 				if (overlay) {
 					overlay.webContents.send('overlayState', (lobbyCode === 'MENU' ? "MENU" : "VOICE"));
 				}
@@ -373,16 +373,16 @@ const Voice: React.FC = function () {
 								[socketPlayerIds[peer]]: talking && gain.gain.value > 0
 							}));
 
-							let overlay = remote.getGlobal("overlay");
+							const overlay = remote.getGlobal("overlay");
 							if (overlay) {
-								var reallyTalking = talking && gain.gain.value > 0;
+								const reallyTalking = talking && gain.gain.value > 0;
 								overlay.webContents.send(reallyTalking ? 'overlayTalking' : 'overlayNotTalking', socketPlayerIds[peer]);
 								overlay.webContents.send('overlaySocketIds', socketPlayerIds);
 							}
 
 							return socketPlayerIds;
 						});
-						let overlay = remote.getGlobal("overlay");
+						const overlay = remote.getGlobal("overlay");
 						if (overlay) overlay.webContents.send('overlaySocketIds', socketPlayerIds);
 					};
 					audioElements.current[peer] = { element: audio, gain, pan, muffle };
@@ -464,7 +464,7 @@ const Voice: React.FC = function () {
 		for (const k of Object.keys(socketPlayerIds)) {
 			playerSocketIds[socketPlayerIds[k]] = k;
 		}
-		let overlay = remote.getGlobal("overlay");
+		const overlay = remote.getGlobal("overlay");
 		if (overlay) overlay.webContents.send('overlaySocketIds', socketPlayerIds);
 		for (const player of otherPlayers) {
 			const audio = audioElements.current[playerSocketIds[player.id]];
