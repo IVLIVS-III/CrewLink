@@ -6,6 +6,7 @@ import './css/settings.css';
 import MicrophoneSoundBar from './MicrophoneSoundBar';
 import TestSpeakersButton from './TestSpeakersButton';
 import { ISettings } from '../common/ISettings';
+import { remote } from 'electron';
 
 const keys = new Set(['Space', 'Backspace', 'Delete', 'Enter', 'Up', 'Down', 'Left', 'Right', 'Home', 'End', 'PageUp', 'PageDown', 'Escape', 'LControl', 'LShift', 'LAlt', 'RControl', 'RShift', 'RAlt']);
 
@@ -98,7 +99,15 @@ const store = new Store<ISettings>({
 		enableSpatialAudio: {
 			type: 'boolean',
 			default: true
-		}
+		},
+		compactOverlay: {
+			type: 'boolean',
+			default: false
+		},
+		overlayPosition: {
+			type: 'string',
+			default: 'top'
+		},
 	}
 });
 
@@ -168,6 +177,11 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 			action: store.store
 		});
 	}, []);
+	
+	let overlay = remote.getGlobal('overlay');
+	if (overlay) {
+		overlay.webContents.send('overlaySettings', settings);
+	}
 
 	useEffect(() => {
 		setUnsavedCount(s => s + 1);
@@ -310,6 +324,25 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 			})}>
 				<input type="checkbox" checked={settings.enableSpatialAudio} style={{ color: '#fd79a8' }} readOnly />
 				<label>Enable Spatial Audio</label>
+			</div>
+			<div className="form-control l" style={{ color: '#f72f5e' }}>
+				<label>Overlay Position</label>
+				<select onChange={(ev) => {
+					setSettings({
+						type: 'setOne',
+						action: ['overlayPosition', ev.target.value]
+					});
+				}}>
+				  <option value="top" selected={settings.overlayPosition == "top"}>Top Center</option>
+				  <option value="bottom_left" selected={settings.overlayPosition == "bottom_left"}>Bottom Left</option>
+				</select>			
+			</div>
+			<div className="form-control m" style={{ color: '#f72f5e', paddingTop: "10px" }} onClick={() => setSettings({
+				type: 'setOne',
+				action: ['compactOverlay', !settings.compactOverlay]
+			})}>
+				<input type="checkbox" checked={settings.compactOverlay} style={{ color: '#f72f5e' }} readOnly />
+				<label>Compact Overlay</label>
 			</div>
 			<div className='settings-alert' style={{ display: unsaved ? 'flex' : 'none' }}>
 				<span>
