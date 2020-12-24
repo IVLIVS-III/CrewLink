@@ -53,6 +53,8 @@ This branch includes some PRs of the original that haven't been merged yet. Thes
 * #288: Adds ability for imposters within a vent to hear other imposters in vents (https://github.com/ottomated/CrewLink/pull/288)
 * #107: Add mute key (RAlt). (https://github.com/ottomated/CrewLink/pull/107)
 
+The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.1.6-m.1.exe
+
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
