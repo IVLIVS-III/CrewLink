@@ -231,6 +231,7 @@ const Voice: React.FC = function () {
 	useEffect(() => {
 		// Connect to voice relay server
 		connectionStuff.current.socket = io(settings.serverURL, { transports: ['websocket'] });
+		console.log('connectionStuff.current.socket: ', connectionStuff.current.socket);
 		const { socket } = connectionStuff.current;
 
 		socket.on('connect', () => {
@@ -243,6 +244,7 @@ const Voice: React.FC = function () {
 
 		let iceConfig: RTCConfiguration = DEFAULT_ICE_CONFIG;
 		socket.on('peerConfig', (peerConfig: PeerConfig) => {
+			console.log('peerConfig: ', peerConfig);
 			if (!validatePeerConfig(peerConfig)) {
 				alert(`Server sent a malformed peer config. Default config will be used.${validatePeerConfig.errors ?
 					` See errors below:\n${validatePeerConfig.errors.map(error => error.dataPath + ' ' + error.message).join('\n')}` : ``
