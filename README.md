@@ -42,6 +42,7 @@
 ## Changes
 
 This branch includes some PRs of the original that haven't been merged yet. These are:
+* (new) #192: Add "Haunting" of Impostors (https://github.com/ottomated/CrewLink/pull/192)
 * #149: Add support for TURN server and allow configurable STUN server (https://github.com/ottomated/CrewLink/pull/149)
 * #294: Add In-Game Overlay (https://github.com/ottomated/CrewLink/pull/294)
 * #382: Improve audio connection stability (https://github.com/ottomated/CrewLink/pull/382)
