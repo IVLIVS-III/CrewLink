@@ -28,6 +28,7 @@
 ## Table of Contents
 
 * [Changes](#changes)
+  * [Installing the modified version](#installing-the-modified-version)
 * [About the Project](#about-the-project)
 * [Installation](#installation)
 * [Development](#development)
@@ -42,16 +43,19 @@
 ## Changes
 
 This branch includes some PRs of the original that haven't been merged yet. These are:
-* #294: Add In-Game Overlay (https://github.com/ottomated/CrewLink/pull/294)
-* #382: Improve audio connection stability (https://github.com/ottomated/CrewLink/pull/382)
-* #386: Add Mouse Button 4/5/6/7 Push To Talk (https://github.com/ottomated/CrewLink/pull/386)
-* #376: Allow Users To Adjust Live Player Volumes While Dead (https://github.com/ottomated/CrewLink/pull/376)
-* #375: Trim Server URL (https://github.com/ottomated/CrewLink/pull/375)
-* #355: Add Server URL to main screen for subtle visual cue (https://github.com/ottomated/CrewLink/pull/355)
-* #353: Muffling vents (https://github.com/ottomated/CrewLink/pull/353)
-* #351: Settings UI tweaks (https://github.com/ottomated/CrewLink/pull/351)
-* #288: Adds ability for imposters within a vent to hear other imposters in vents (https://github.com/ottomated/CrewLink/pull/288)
-* #107: Add mute key (RAlt). (https://github.com/ottomated/CrewLink/pull/107)
+* (new) #294: Add In-Game Overlay (https://github.com/ottomated/CrewLink/pull/294)
+* (new) #382: Improve audio connection stability (https://github.com/ottomated/CrewLink/pull/382)
+* (new) #386: Add Mouse Button 4/5/6/7 Push To Talk (https://github.com/ottomated/CrewLink/pull/386)
+* (new) #376: Allow Users To Adjust Live Player Volumes While Dead (https://github.com/ottomated/CrewLink/pull/376)
+* (new) #375: Trim Server URL (https://github.com/ottomated/CrewLink/pull/375)
+* (new) #355: Add Server URL to main screen for subtle visual cue (https://github.com/ottomated/CrewLink/pull/355)
+* (new) #353: Muffling vents (https://github.com/ottomated/CrewLink/pull/353)
+* (new) #351: Settings UI tweaks (https://github.com/ottomated/CrewLink/pull/351)
+* (new) #288: Adds ability for imposters within a vent to hear other imposters in vents (https://github.com/ottomated/CrewLink/pull/288)
+* (new) #107: Add mute key (RAlt). (https://github.com/ottomated/CrewLink/pull/107)
+
+### Installing the modified version
+First uninstall the old version.
 
 The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.1.6-m.1.exe
 
