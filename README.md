@@ -42,9 +42,9 @@
 ## Changes
 
 This branch includes some PRs of the original that haven't been merged yet. These are:
+* #149: Add support for TURN server and allow configurable STUN server (https://github.com/ottomated/CrewLink/pull/149)
 * #294: Add In-Game Overlay (https://github.com/ottomated/CrewLink/pull/294)
 * #382: Improve audio connection stability (https://github.com/ottomated/CrewLink/pull/382)
-* #149: Add support for TURN server and allow configurable STUN server (https://github.com/ottomated/CrewLink/pull/149)
 * #386: Add Mouse Button 4/5/6/7 Push To Talk (https://github.com/ottomated/CrewLink/pull/386)
 * #376: Allow Users To Adjust Live Player Volumes While Dead (https://github.com/ottomated/CrewLink/pull/376)
 * #375: Trim Server URL (https://github.com/ottomated/CrewLink/pull/375)
