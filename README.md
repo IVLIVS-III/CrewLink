@@ -28,6 +28,7 @@
 ## Table of Contents
 
 * [Changes](#changes)
+  * [Installing the modified version](#installing-the-modified-version)
 * [About the Project](#about-the-project)
 * [Installation](#installation)
 * [Development](#development)
@@ -52,6 +53,9 @@ This branch includes some PRs of the original that haven't been merged yet. Thes
 * #351: Settings UI tweaks (https://github.com/ottomated/CrewLink/pull/351)
 * #288: Adds ability for imposters within a vent to hear other imposters in vents (https://github.com/ottomated/CrewLink/pull/288)
 * #107: Add mute key (RAlt). (https://github.com/ottomated/CrewLink/pull/107)
+
+### Installing the modified version
+First uninstall the old version.
 
 The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.1.6-m.2.exe
 
