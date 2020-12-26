@@ -18,4 +18,5 @@ export interface ISettings {
 	compactOverlay: boolean;
 	overlayPosition: string;
 	adjustLiveOnDead: number;
+	haunting: boolean;
 }

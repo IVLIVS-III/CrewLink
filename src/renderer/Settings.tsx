@@ -118,8 +118,12 @@ const store = new Store<ISettings>({
 		},
 		adjustLiveOnDead: {
 			type: 'number',
-			default: 1,
-		}
+			default: 1
+		},
+		haunting: {
+			type: 'boolean',
+			default: true
+		},
 	}
 });
 
@@ -399,6 +403,14 @@ const Settings: React.FC<SettingsProps> = function ({ open, onClose }: SettingsP
 						})
 					}
 					readOnly />
+			</div>
+			<div className="form-control m" style={{ color: '#F45837' }}
+				onClick={() => setSettings({
+					type: 'setOne',
+					action: ['haunting', !settings.haunting]
+				})}>
+				<input type="checkbox" checked={settings.haunting} style={{ color: '#F45837' }} readOnly />
+				<label>Impostors Hear Ghosts</label>
 			</div>
 		</div>
 	</div >;
