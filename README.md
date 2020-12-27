@@ -42,7 +42,8 @@
 ## Changes
 
 This branch includes some PRs of the original that haven't been merged yet. These are:
-* (new) #192: Add "Haunting" of Impostors (https://github.com/ottomated/CrewLink/pull/192)
+* (new) Minor bug fixes of PR integration issues.
+* #192: Add "Haunting" of Impostors (https://github.com/ottomated/CrewLink/pull/192)
 * #149: Add support for TURN server and allow configurable STUN server (https://github.com/ottomated/CrewLink/pull/149)
 * #294: Add In-Game Overlay (https://github.com/ottomated/CrewLink/pull/294)
 * #382: Improve audio connection stability (https://github.com/ottomated/CrewLink/pull/382)
@@ -58,7 +59,7 @@ This branch includes some PRs of the original that haven't been merged yet. Thes
 ### Installing the modified version
 First uninstall the old version.
 
-The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.1.6-m.3.exe
+The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.1.6-m.4.exe
 
 Use this version together with the modified server version at https://github.com/IVLIVS-III/CrewLink-server/tree/cherry-picked-build-2
 
