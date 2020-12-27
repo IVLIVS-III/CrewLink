@@ -24,6 +24,7 @@ export default function Overlay() {
 	const [talking, setTalking] = useState(false);
 	const [otherTalking, setOtherTalking] = useState<OtherTalking>({});
 	const [otherDead, setOtherDead] = useState<OtherDead>({});
+	const [audioConnected, setAudioConnected] = useState<AudioConnected>({});
 	const myPlayer = useMemo(() => {
 			if (!gameState || !gameState.players) return undefined;
 			else return gameState.players.find(p => p.isLocal);
@@ -162,13 +163,21 @@ export default function Overlay() {
 					{
 						playerList.map(player => {
 							const connected = Object.values(socketPlayerIds).includes(player.id) || player.isLocal;
+							const audio = audioConnected[peer];
+							let borderColor = '#C0392B';
+							if (connected) {
+								if (audio || player.isLocal)
+									borderColor = '#2ECC71';
+								else
+									borderColor = '#FFFF00';
+							}
 							let name = settings.compactOverlay ? "" : <span><small>{player.name}</small></span>
 							return (
 								<div key={player.id} style={{width:"60px", textAlign:"center"}}>
 									<div style={{paddingLeft:"5px"}}>
 										<Avatar key={player.id} player={player}
 											talking={!connected || otherTalking[player.id] || (player.isLocal && talking)}
-											borderColor={connected ? '#2ecc71' : '#c0392b'}
+											borderColor={borderColor}
 											isAlive={(!player.isLocal && !otherDead[player.id]) || (player.isLocal && !player.isDead)}
 											size={50} />
 									</div>
