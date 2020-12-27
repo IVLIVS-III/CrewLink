@@ -67,7 +67,7 @@ interface ICEServer {
 }
 
 interface PeerConfig {
-	forceRelayOnly: Boolean,
+	forceRelayOnly: boolean,
 	stunServers: ICEServer[],
 	turnServers: ICEServer[]
 }
@@ -78,7 +78,7 @@ const DEFAULT_ICE_CONFIG: RTCConfiguration = {
 			urls: 'stun:stun.l.google.com:19302'
 		}
 	]
-}
+};
 
 function calculateVoiceAudio(state: AmongUsState, settings: ISettings, me: Player, other: Player, gain: GainNode, pan: PannerNode, muffle: BiquadFilterNode, reverbGain: GainNode): void {
 	const audioContext = pan.context;
@@ -136,7 +136,7 @@ function calculateVoiceAudio(state: AmongUsState, settings: ISettings, me: Playe
 	if (me.isDead && !other.isDead) {
 		gain.gain.value = settings.adjustLiveOnDead;
 	}
-	
+
 	if (gain.gain.value > 0 && Math.sqrt(Math.pow(panPos[0], 2) + Math.pow(panPos[1], 2)) > 7) {
 		gain.gain.value = 0;
 	}
@@ -161,9 +161,9 @@ function calculateVoiceAudio(state: AmongUsState, settings: ISettings, me: Playe
 }
 
 function toArrayBuffer(buf: Buffer) {
-	var ab = new ArrayBuffer(buf.length);
-	var view = new Uint8Array(ab);
-	for (var i = 0; i < buf.length; ++i) {
+	const ab = new ArrayBuffer(buf.length);
+	const view = new Uint8Array(ab);
+	for (let i = 0; i < buf.length; ++i) {
 		view[i] = buf[i];
 	}
 	return ab;
@@ -193,10 +193,10 @@ const Voice: React.FC = function () {
 
 	let joinedLobby = '';
 
-	var reverbFile: any = null;
-	if (fs.existsSync("static/reverb.ogx"))
+	let reverbFile: any = null;
+	if (fs.existsSync('static/reverb.ogx'))
 		reverbFile = fs.readFileSync('static/reverb.ogx');
-	else if (fs.existsSync("resources/static/reverb.ogx"))
+	else if (fs.existsSync('resources/static/reverb.ogx'))
 		reverbFile = fs.readFileSync('resources/static/reverb.ogx');
 
 	// Handle pushToTalk, if set
@@ -280,13 +280,12 @@ const Voice: React.FC = function () {
 			console.log('peerConfig: ', peerConfig);
 			if (!validatePeerConfig(peerConfig)) {
 				alert(`Server sent a malformed peer config. Default config will be used.${validatePeerConfig.errors ?
-					` See errors below:\n${validatePeerConfig.errors.map(error => error.dataPath + ' ' + error.message).join('\n')}` : ``
-					}`);
+					` See errors below:\n${validatePeerConfig.errors.map(error => error.dataPath + ' ' + error.message).join('\n')}` : ''}`);
 				return;
 			}
 
 			if (peerConfig.forceRelayOnly && !peerConfig.turnServers) {
-				alert(`Server has forced relay mode enabled but provides no relay servers. Default config will be used.`);
+				alert('Server has forced relay mode enabled but provides no relay servers. Default config will be used.');
 				return;
 			}
 
@@ -298,10 +297,10 @@ const Voice: React.FC = function () {
 							urls: server.url,
 							username: server.username,
 							credential: server.credential
-						}
+						};
 					})
 			};
-		})
+		});
 
 		// Initialize variables
 		let audioListener: {
@@ -360,14 +359,14 @@ const Voice: React.FC = function () {
 			audioListener = VAD(ac, ac.createMediaStreamSource(stream), undefined, {
 				onVoiceStart: () => {
 					setTalking(true);
-					const overlay = remote.getGlobal("overlay");
+					const overlay = remote.getGlobal('overlay');
 					if (overlay) {
 						overlay.webContents.send('overlayTalkingSelf', true);
 					}
 				},
 				onVoiceStop: () => {
 					setTalking(false);
-					const overlay = remote.getGlobal("overlay");
+					const overlay = remote.getGlobal('overlay');
 					if (overlay) {
 						overlay.webContents.send('overlayTalkingSelf', false);
 					}
@@ -381,9 +380,9 @@ const Voice: React.FC = function () {
 			const connect = (lobbyCode: string, playerId: number) => {
 				console.log('Connect called', lobbyCode, playerId);
 
-				const overlay = remote.getGlobal("overlay");
+				const overlay = remote.getGlobal('overlay');
 				if (overlay) {
-					overlay.webContents.send('overlayState', (lobbyCode === 'MENU' ? "MENU" : "VOICE"));
+					overlay.webContents.send('overlayState', (lobbyCode === 'MENU' ? 'MENU' : 'VOICE'));
 				}
 
 				if (lobbyCode === 'MENU') {
@@ -451,7 +450,7 @@ const Voice: React.FC = function () {
 								reverb.buffer = buffer;
 							},
 							function (e) {
-								alert("Error when decoding audio data" + e);
+								alert('Error when decoding audio data' + e);
 							}
 						);
 
@@ -474,7 +473,7 @@ const Voice: React.FC = function () {
 								[socketPlayerIds[peer]]: talking && gain.gain.value > 0
 							}));
 
-							const overlay = remote.getGlobal("overlay");
+							const overlay = remote.getGlobal('overlay');
 							if (overlay) {
 								const reallyTalking = talking && gain.gain.value > 0;
 								overlay.webContents.send(reallyTalking ? 'overlayTalking' : 'overlayNotTalking', socketPlayerIds[peer]);
@@ -483,7 +482,7 @@ const Voice: React.FC = function () {
 
 							return socketPlayerIds;
 						});
-						const overlay = remote.getGlobal("overlay");
+						const overlay = remote.getGlobal('overlay');
 						if (overlay) overlay.webContents.send('overlaySocketIds', socketPlayerIds);
 					};
 					audioElements.current[peer] = { element: audio, gain, pan, muffle, reverbGain, reverb, compressor };
@@ -565,7 +564,7 @@ const Voice: React.FC = function () {
 		for (const k of Object.keys(socketPlayerIds)) {
 			playerSocketIds[socketPlayerIds[k]] = k;
 		}
-		const overlay = remote.getGlobal("overlay");
+		const overlay = remote.getGlobal('overlay');
 		if (overlay) overlay.webContents.send('overlaySocketIds', socketPlayerIds);
 		for (const player of otherPlayers) {
 			const audio = audioElements.current[playerSocketIds[player.id]];
