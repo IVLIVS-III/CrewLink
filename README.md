@@ -27,6 +27,8 @@
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
+* [Changes](#changes)
+  * [Installing the modified version](#installing-the-modified-version)
 * [About the Project](#about-the-project)
 * [Installation](#installation)
 * [Development](#development)
@@ -35,6 +37,29 @@
 * [Contributing](#contributing)
 * [License](#license)
 
+
+
+<!-- CHANGES -->
+## Changes
+
+This branch includes some PRs of the original that haven't been merged yet. These are:
+* (new) #294: Add In-Game Overlay (https://github.com/ottomated/CrewLink/pull/294)
+* (new) #192: Add "Haunting" of Impostors (https://github.com/ottomated/CrewLink/pull/192)
+* (new) #375: Trim Server URL (https://github.com/ottomated/CrewLink/pull/375)
+* (new) #376: Allow Users To Adjust Live Player Volumes While Dead (https://github.com/ottomated/CrewLink/pull/376)
+* (new) #353: Muffling vents (https://github.com/ottomated/CrewLink/pull/353)
+* (new) #288: Adds ability for imposters within a vent to hear other imposters in vents (https://github.com/ottomated/CrewLink/pull/288)
+<!-- add if necessary in 1.2.0-m.2
+* #149: Add support for TURN server and allow configurable STUN server (https://github.com/ottomated/CrewLink/pull/149)
+* #382: Improve audio connection stability (https://github.com/ottomated/CrewLink/pull/382)
+-->
+
+### Installing the modified version
+First uninstall the old version.
+
+The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.1.6-m.4.exe
+
+<!-- Use this version together with the modified server version at https://github.com/IVLIVS-III/CrewLink-server/tree/cherry-picked-build-2 -->
 
 
 <!-- ABOUT THE PROJECT -->
