@@ -154,7 +154,7 @@ function calculateVoiceAudio(state: AmongUsState, settings: ISettings, me: Playe
 
 	// Living impostors hear ghosts at a faint volume
 	if (gain.gain.value > 0 && !me.isDead && me.isImpostor && other.isDead && settings.haunting) {
-		gain.gain.value = gain.gain.value * 0.015;
+		gain.gain.value = gain.gain.value * 0.3;
 		if (reverbGain != null) reverbGain.gain.value = 1;
 	}
 }
