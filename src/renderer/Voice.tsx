@@ -136,7 +136,7 @@ function calculateVoiceAudio(state: AmongUsState, settings: ISettings, me: Playe
 	} else {
 		gain.gain.value = 0;
 	}
-	if (gain.gain.value === 1 && Math.sqrt(Math.pow(panPos[0], 2) + Math.pow(panPos[1], 2)) > 7) {
+	if (gain.gain.value > 0 && Math.sqrt(Math.pow(panPos[0], 2) + Math.pow(panPos[1], 2)) > 7) {
 		gain.gain.value = 0;
 	}
 
@@ -144,8 +144,8 @@ function calculateVoiceAudio(state: AmongUsState, settings: ISettings, me: Playe
 		// Enable muffle
 		muffle.frequency.value = 400;
 		muffle.Q.value = 20;
-		if (gain.gain.value === 1)
-			gain.gain.value = 0.7; // Too loud at 1
+		if (gain.gain.value > 0)
+			gain.gain.value = gain.gain.value * 0.7; // Too loud at 1
 	} else {
 		// Disable muffle
 		muffle.frequency.value = 20000;
