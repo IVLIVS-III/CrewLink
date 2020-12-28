@@ -167,6 +167,9 @@ export default function Overlay() {
 			baseCSS['marginLeft'] = 'auto';
 			baseCSS['marginRight'] = 'auto';
 			baseCSS['marginTop'] = '0px';
+			baseCSS['display'] = 'flex';
+			baseCSS['justifyContent'] = 'center';
+			baseCSS['alignItems'] = 'center';
 		} else if (settings.overlayPosition == 'bottom_left') {
 			baseCSS['position'] = 'absolute';
 			baseCSS['bottom'] = '0px';
