@@ -215,6 +215,10 @@ const store = new Store<ISettings>({
 			type: 'boolean',
 			default: true,
 		},
+		haunting: {
+			type: 'boolean',
+			default: true,
+		},
 		compactOverlay: {
 			type: 'boolean',
 			default: false,
@@ -733,6 +737,17 @@ const Settings: React.FC<SettingsProps> = function ({
 						setSettings({
 							type: 'setOne',
 							action: ['enableSpatialAudio', checked],
+						});
+					}}
+					control={<Checkbox />}
+				/>
+				<FormControlLabel
+					label="Impostors Hear Ghosts"
+					checked={settings.haunting}
+					onChange={(_, checked: boolean) => {
+						setSettings({
+							type: 'setOne',
+							action: ['haunting', checked],
 						});
 					}}
 					control={<Checkbox />}
