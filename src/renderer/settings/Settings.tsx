@@ -296,8 +296,9 @@ interface MediaDevice {
 
 function validateServerUrl(uri: string): boolean {
 	try {
-		if (!isHttpUri(uri) && !isHttpsUri(uri)) return false;
-		const url = new URL(uri);
+		let trimmedUri = uri.trim();
+		if (!isHttpUri(trimmedUri) && !isHttpsUri(trimmedUri)) return false;
+		const url = new URL(trimmedUri);
 		if (url.hostname === 'discord.gg') return false;
 		if (url.pathname !== '/') return false;
 		return true;
