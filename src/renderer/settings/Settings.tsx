@@ -211,6 +211,10 @@ const store = new Store<ISettings>({
 			type: 'boolean',
 			default: false,
 		},
+		hideVoiceServer: {
+			type: 'boolean',
+			default: false,
+		},
 		enableSpatialAudio: {
 			type: 'boolean',
 			default: true,
@@ -736,6 +740,17 @@ const Settings: React.FC<SettingsProps> = function ({
 					control={<Checkbox />}
 				/>
 				<FormControlLabel
+					label="Show Voice Server"
+					checked={!settings.hideVoiceServer}
+					onChange={(_, checked: boolean) => {
+						setSettings({
+							type: 'setOne',
+							action: ['hideVoiceServer', !checked],
+						});
+					}}
+					control={<Checkbox />}
+				/>
+				<FormControlLabel
 					label="Enable Spatial Audio"
 					checked={settings.enableSpatialAudio}
 					onChange={(_, checked: boolean) => {
@@ -757,7 +772,7 @@ const Settings: React.FC<SettingsProps> = function ({
 					}}
 					control={<Checkbox />}
 				/>
-				<Typography gutterBottom>
+				<Typography gutterBottom align="center">
 					Live Players Vol. when Dead: {''}
 					{Math.round(settings.adjustLiveOnDead * 100)}
 				</Typography>

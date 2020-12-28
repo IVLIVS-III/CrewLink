@@ -286,6 +286,8 @@ const Voice: React.FC<VoiceProps> = function ({
 	let { lobbyCode: displayedLobbyCode } = gameState;
 	if (displayedLobbyCode !== 'MENU' && settings.hideCode)
 		displayedLobbyCode = 'LOBBY';
+	let displayedVoiceServer = settings.serverURL;
+	if (settings.hideVoiceServer) displayedVoiceServer = '';
 	const [talking, setTalking] = useState(false);
 	const [socketClients, setSocketClients] = useState<SocketClientMap>({});
 	const socketClientsRef = useRef(socketClients);
@@ -941,6 +943,9 @@ const Voice: React.FC<VoiceProps> = function ({
 					);
 				})}
 			</Grid>
+			<Typography align="center">
+				{displayedVoiceServer}
+			</Typography>
 		</div>
 	);
 };

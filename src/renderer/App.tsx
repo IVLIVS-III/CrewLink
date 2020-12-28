@@ -128,6 +128,7 @@ export default function App() {
 		deafenShortcut: 'RControl',
 		muteShortcut: 'RAlt',
 		hideCode: false,
+		hideVoiceServer: false,
 		enableSpatialAudio: true,
 		adjustLiveOnDead: 1,
 		haunting: true,
@@ -145,15 +146,14 @@ export default function App() {
 	useEffect(() => {
 		const onOpen = (_: Electron.IpcRendererEvent, isOpen: boolean) => {
 			setState(isOpen ? AppState.VOICE : AppState.MENU);
-			let overlay = remote.getGlobal('overlay');
+			const overlay = remote.getGlobal('overlay');
 			if (overlay) {
 				overlay.webContents.send('overlayState', 'MENU');
 			}
-
 		};
 		const onState = (_: Electron.IpcRendererEvent, newState: AmongUsState) => {
 			setGameState(newState);
-			let overlay = remote.getGlobal('overlay');
+			const overlay = remote.getGlobal('overlay');
 			if (overlay) {
 				overlay.webContents.send('overlayGameState', newState);
 			}

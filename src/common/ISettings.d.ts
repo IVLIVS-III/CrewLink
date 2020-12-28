@@ -8,6 +8,7 @@ export interface ISettings {
 	deafenShortcut: string;
 	muteShortcut: string;
 	hideCode: boolean;
+	hideVoiceServer: boolean;
 	enableSpatialAudio: boolean;
 	adjustLiveOnDead: number;
 	haunting: boolean;
