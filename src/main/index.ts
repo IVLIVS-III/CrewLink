@@ -9,11 +9,21 @@ import './hook';
 import { initializeIpcHandlers, initializeIpcListeners } from './ipc-handlers';
 import { IpcRendererMessages } from '../common/ipc-messages';
 import { ProgressInfo } from 'builder-util-runtime';
+import { overlayWindow } from 'electron-overlay-window';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
+declare global {
+	namespace NodeJS {
+		interface Global {
+			mainWindow: BrowserWindow | null;
+			overlay: BrowserWindow | null;
+		}
+	}
+}
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow: BrowserWindow | null;
+global.mainWindow = null;
+global.overlay = null;
 
 app.commandLine.appendSwitch('disable-pinch');
 
@@ -53,7 +63,7 @@ function createMainWindow() {
 	if (isDevelopment) {
 		crewlinkVersion = '0.0.0';
 		window.loadURL(
-			`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=DEV`
+			`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=DEV&view=app`
 		);
 	} else {
 		crewlinkVersion = autoUpdater.currentVersion.version;
@@ -63,6 +73,7 @@ function createMainWindow() {
 				protocol: 'file',
 				query: {
 					version: autoUpdater.currentVersion.version,
+					view: "app",
 				},
 				slashes: true,
 			})
@@ -71,7 +82,11 @@ function createMainWindow() {
 	window.webContents.userAgent = `CrewLink/${crewlinkVersion} (${process.platform})`;
 
 	window.on('closed', () => {
-		mainWindow = null;
+		global.mainWindow = null;
+		if (global.overlay != null) {
+			global.overlay.close()
+			global.overlay = null;
+		}
 	});
 
 	window.webContents.on('devtools-opened', () => {
@@ -90,24 +105,24 @@ if (!gotTheLock) {
 } else {
 	autoUpdater.checkForUpdates();
 	autoUpdater.on('update-available', () => {
-		mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
+		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
 			state: 'available',
 		});
 	});
 	autoUpdater.on('error', (err: string) => {
-		mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
+		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
 			state: 'error',
 			error: err,
 		});
 	});
 	autoUpdater.on('download-progress', (progress: ProgressInfo) => {
-		mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
+		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
 			state: 'downloading',
 			progress,
 		});
 	});
 	autoUpdater.on('update-downloaded', () => {
-		mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
+		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
 			state: 'downloaded',
 		});
 		app.relaunch();
@@ -144,24 +159,59 @@ if (!gotTheLock) {
 
 	app.on('second-instance', () => {
 		// Someone tried to run a second instance, we should focus our window.
-		if (mainWindow) {
-			if (mainWindow.isMinimized()) mainWindow.restore();
-			mainWindow.focus();
+		if (global.mainWindow) {
+			if (global.mainWindow.isMinimized()) global.mainWindow.restore();
+			global.mainWindow.focus();
 		}
 	});
+
+	function createOverlay() {
+		const overlay = new BrowserWindow({
+			width: 400,
+			height: 300,
+			webPreferences: {
+				nodeIntegration: true,
+				enableRemoteModule: true,
+				webSecurity: false
+			},
+			...overlayWindow.WINDOW_OPTS
+		});
+
+		if (isDevelopment) {
+			overlay.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=${autoUpdater.currentVersion.version}&view=overlay`)
+		} else {
+			overlay.loadURL(formatUrl({
+				pathname: joinPath(__dirname, 'index.html'),
+				protocol: 'file',
+				query: {
+					version: autoUpdater.currentVersion.version,
+					view: "overlay"
+				},
+				slashes: true
+			}))
+		}
+		overlay.setIgnoreMouseEvents(true);
+		overlayWindow.attachTo(overlay, 'Among Us')
+
+		return overlay;
+	}
 
 	// quit application when all windows are closed
 	app.on('window-all-closed', () => {
 		// on macOS it is common for applications to stay open until the user explicitly quits
 		if (process.platform !== 'darwin') {
+			if (global.overlay != null) {
+				global.overlay.close()
+				global.overlay = null;
+			}
 			app.quit();
 		}
 	});
 
 	app.on('activate', () => {
 		// on macOS it is common to re-create a window even after all windows have been closed
-		if (mainWindow === null) {
-			mainWindow = createMainWindow();
+		if (global.mainWindow === null) {
+			global.mainWindow = createMainWindow();
 		}
 	});
 
@@ -169,6 +219,7 @@ if (!gotTheLock) {
 	app.whenReady().then(() => {
 		initializeIpcListeners();
 		initializeIpcHandlers();
-		mainWindow = createMainWindow();
+		global.mainWindow = createMainWindow();
+		global.overlay = createOverlay();
 	});
 }

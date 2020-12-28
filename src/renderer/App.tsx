@@ -5,10 +5,9 @@ import React, {
 	useReducer,
 	useState,
 } from 'react';
-import ReactDOM from 'react-dom';
 import Voice from './Voice';
 import Menu from './Menu';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { AmongUsState } from '../common/AmongUsState';
 import Settings, {
 	settingsReducer,
@@ -111,7 +110,7 @@ enum AppState {
 	VOICE,
 }
 
-function App() {
+export default function App() {
 	const [state, setState] = useState<AppState>(AppState.MENU);
 	const [gameState, setGameState] = useState<AmongUsState>({} as AmongUsState);
 	const [settingsOpen, setSettingsOpen] = useState(false);
@@ -130,6 +129,8 @@ function App() {
 		muteShortcut: 'RAlt',
 		hideCode: false,
 		enableSpatialAudio: true,
+		compactOverlay: false,
+		overlayPosition: 'top',
 		localLobbySettings: {
 			maxDistance: 5.32,
 		},
@@ -142,9 +143,18 @@ function App() {
 	useEffect(() => {
 		const onOpen = (_: Electron.IpcRendererEvent, isOpen: boolean) => {
 			setState(isOpen ? AppState.VOICE : AppState.MENU);
+			let overlay = remote.getGlobal('overlay');
+			if (overlay) {
+				overlay.webContents.send('overlayState', 'MENU');
+			}
+
 		};
 		const onState = (_: Electron.IpcRendererEvent, newState: AmongUsState) => {
 			setGameState(newState);
+			let overlay = remote.getGlobal('overlay');
+			if (overlay) {
+				overlay.webContents.send('overlayGameState', newState);
+			}
 		};
 		const onError = (_: Electron.IpcRendererEvent, error: string) => {
 			shouldInit = false;
@@ -254,5 +264,3 @@ function App() {
 		</GameStateContext.Provider>
 	);
 }
-
-ReactDOM.render(<App />, document.getElementById('app'));

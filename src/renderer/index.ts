@@ -1,2 +1,2 @@
-import './App';
+import './ViewManager';
 import './css/index.css';

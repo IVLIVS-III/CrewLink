@@ -14,6 +14,7 @@ import {
 import MicrophoneSoundBar from './MicrophoneSoundBar';
 import TestSpeakersButton from './TestSpeakersButton';
 import { ISettings, ILobbySettings } from '../../common/ISettings';
+import { remote } from 'electron';
 import TextField from '@material-ui/core/TextField';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -213,6 +214,14 @@ const store = new Store<ISettings>({
 		enableSpatialAudio: {
 			type: 'boolean',
 			default: true,
+		},
+		compactOverlay: {
+			type: 'boolean',
+			default: false,
+		},
+		overlayPosition: {
+			type: 'string',
+			default: 'top',
 		},
 		localLobbySettings: {
 			type: 'object',
@@ -430,6 +439,11 @@ const Settings: React.FC<SettingsProps> = function ({
 			action: store.get('localLobbySettings'),
 		});
 	}, []);
+
+	const overlay = remote.getGlobal('overlay');
+	if (overlay) {
+		overlay.webContents.send('overlaySettings', settings);
+	}
 
 	useEffect(() => {
 		setUnsavedCount((s) => s + 1);
@@ -719,6 +733,48 @@ const Settings: React.FC<SettingsProps> = function ({
 						setSettings({
 							type: 'setOne',
 							action: ['enableSpatialAudio', checked],
+						});
+					}}
+					control={<Checkbox />}
+				/>
+				<TextField
+					select
+					label="Overlay Position"
+					variant="outlined"
+					color="secondary"
+					value={settings.overlayPosition}
+					className={classes.shortcutField}
+					SelectProps={{ native: true }}
+					InputLabelProps={{ shrink: true }}
+					onChange={(ev) => {
+						setSettings({
+							type: 'setOne',
+							action: ['overlayPosition', ev.target.value],
+						});
+					}}
+				>
+					{[
+						{
+							id: 'top',
+							label: 'Top Center',
+						},
+						{
+							id: 'bottom_left',
+							label: 'Bottom Left',
+						},
+					].map((d) => (
+						<option key={d.id} value={d.id}>
+							{d.label}
+						</option>
+					))}
+				</TextField>
+				<FormControlLabel
+					label="Compact Overlay"
+					checked={settings.compactOverlay}
+					onChange={(_, checked: boolean) => {
+						setSettings({
+							type: 'setOne',
+							action: ['compactOverlay', checked],
 						});
 					}}
 					control={<Checkbox />}
