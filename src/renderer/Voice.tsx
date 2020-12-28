@@ -110,8 +110,15 @@ function calculateVoiceAudio(
 	panPos[1] = Math.min(999, Math.max(-999, panPos[1]));
 	// Don't hear people inside vents
 	if (other.inVent) {
-		gain.gain.value = 0;
-		return;
+		if(me.inVent) {
+			gain.gain.value = 1;
+			pan.positionX.setValueAtTime(panPos[0], audioContext.currentTime);
+			pan.positionY.setValueAtTime(panPos[1], audioContext.currentTime);
+			return;
+		} else {
+			gain.gain.value = 0;
+			return;
+		}
 	}
 	// Ghosts can hear other ghosts
 	if (me.isDead && other.isDead) {
