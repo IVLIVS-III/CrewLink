@@ -8,10 +8,10 @@ import Overlay from './Overlay';
 
 // @ts-ignore
 class ViewManager extends Component {
-	
+
 	static Views() {
 		// @ts-ignore
-		var val:any = {
+		var val: any = {
 			// @ts-ignore
 			app: <App />,
 			// @ts-ignore
@@ -19,13 +19,13 @@ class ViewManager extends Component {
 		}
 		return val
 	}
- 
+
 	static View(props: any) {
 		let name = props.location.search.split("view=")[1];
 		// @ts-ignore
 		console.log("View type: " + name);
 		let view = ViewManager.Views()[name];
-		if(view == null) 
+		if (view == null)
 			throw new Error("View '" + name + "' is undefined");
 		//console.log("View is not null");
 		if (name == "app") {
@@ -34,13 +34,13 @@ class ViewManager extends Component {
 		}
 		return view;
 	}
-	 
+
 	render() {
 		return (
 			<Router>
-			<div>
-			<Route path='/' component={ViewManager.View}/>
-			</div>
+				<div>
+					<Route path='/' component={ViewManager.View} />
+				</div>
 			</Router>
 		);
 	}

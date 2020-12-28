@@ -65,19 +65,19 @@ const Menu: React.FC<MenuProps> = function ({ error }: MenuProps) {
 						<SupportLink />
 					</div>
 				) : (
-					<>
-						<span className={classes.waiting}>Waiting for Among Us</span>
-						<CircularProgress color="primary" size={40} />
-						<button
-							className={classes.button}
-							onClick={() => {
-								ipcRenderer.send(IpcMessages.OPEN_AMONG_US_GAME);
-							}}
-						>
-							Open Game
+						<>
+							<span className={classes.waiting}>Waiting for Among Us</span>
+							<CircularProgress color="primary" size={40} />
+							<button
+								className={classes.button}
+								onClick={() => {
+									ipcRenderer.send(IpcMessages.OPEN_AMONG_US_GAME);
+								}}
+							>
+								Open Game
 						</button>
-					</>
-				)}
+						</>
+					)}
 				<Footer />
 			</div>
 		</div>

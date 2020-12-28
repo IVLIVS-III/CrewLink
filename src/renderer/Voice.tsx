@@ -943,9 +943,7 @@ const Voice: React.FC<VoiceProps> = function ({
 					);
 				})}
 			</Grid>
-			<Typography align="center">
-				{displayedVoiceServer}
-			</Typography>
+			<Typography align="center">{displayedVoiceServer}</Typography>
 		</div>
 	);
 };
