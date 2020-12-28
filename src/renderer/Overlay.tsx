@@ -12,6 +12,10 @@ interface OtherDead {
 	[playerId: number]: boolean;
 }
 
+interface AudioConnected {
+	[peer: string]: boolean; // isConnected
+}
+
 interface SocketIdMap {
 	[socketId: string]: number;
 }
@@ -24,6 +28,7 @@ export default function Overlay() {
 	const [talking, setTalking] = useState(false);
 	const [otherTalking, setOtherTalking] = useState<OtherTalking>({});
 	const [otherDead, setOtherDead] = useState<OtherDead>({});
+	const [audioConnected] = useState<AudioConnected>({});
 	const myPlayer = useMemo(() => {
 		if (!gameState || !gameState.players) return undefined;
 		else return gameState.players.find((p) => p.isLocal);
@@ -77,7 +82,10 @@ export default function Overlay() {
 	}, [gameState.gameState]);
 
 	useEffect(() => {
-		const onOverlaySettings = (_: Electron.IpcRendererEvent, newSettings: any) => {
+		const onOverlaySettings = (
+			_: Electron.IpcRendererEvent,
+			newSettings: any
+		) => {
 			setSettings(newSettings);
 		};
 
@@ -85,16 +93,24 @@ export default function Overlay() {
 			setStatus(state);
 		};
 
-		const onOverlayGameState = (_: Electron.IpcRendererEvent, newState: AmongUsState) => {
+		const onOverlayGameState = (
+			_: Electron.IpcRendererEvent,
+			newState: AmongUsState
+		) => {
 			setGameState(newState);
 		};
 
-		const onOverlaySocketIds = (_: Electron.IpcRendererEvent, ids: SocketIdMap) => {
+		const onOverlaySocketIds = (
+			_: Electron.IpcRendererEvent,
+			ids: SocketIdMap
+		) => {
 			setSocketPlayerIds(ids);
 		};
 
-
-		const onOverlayTalkingSelf = (_: Electron.IpcRendererEvent, talking: boolean) => {
+		const onOverlayTalkingSelf = (
+			_: Electron.IpcRendererEvent,
+			talking: boolean
+		) => {
 			setTalking(talking);
 		};
 
@@ -191,9 +207,18 @@ export default function Overlay() {
 
 	let playerArea: JSX.Element = <></>;
 	if (playerList) {
+		const playerSocketIds: {
+			[index: number]: string;
+		} = {};
+
+		for (const k of Object.keys(socketPlayerIds)) {
+			if (socketPlayerIds[k]) playerSocketIds[socketPlayerIds[k]] = k;
+		}
+
 		playerArea = (
 			<div className="otherplayers" style={playersCSS}>
 				{playerList.map((player) => {
+					const peer = playerSocketIds[player.id];
 					const connected =
 						Object.values(socketPlayerIds).includes(player.id) ||
 						player.isLocal;
@@ -202,18 +227,26 @@ export default function Overlay() {
 							<small>{player.name}</small>
 						</span>
 					);
+					const audio = audioConnected[peer];
 					return (
 						<div key={player.id} style={{ width: '60px', textAlign: 'center' }}>
 							<div style={{ paddingLeft: '5px' }}>
 								<Avatar
 									key={player.id}
+									connectionState={
+										!connected
+											? 'disconnected'
+											: audio || player.isLocal
+												? 'connected'
+												: 'novoice'
+									}
 									player={player}
 									talking={
 										!connected ||
 										otherTalking[player.id] ||
 										(player.isLocal && talking)
 									}
-									borderColor={connected ? '#2ecc71' : '#c0392b'}
+									borderColor="#2ecc71"
 									isAlive={
 										(!player.isLocal && !otherDead[player.id]) ||
 										(player.isLocal && !player.isDead)
