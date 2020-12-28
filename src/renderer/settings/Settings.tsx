@@ -738,6 +738,7 @@ const Settings: React.FC<SettingsProps> = function ({
 					control={<Checkbox />}
 				/>
 				<TextField
+					fullWidth
 					select
 					label="Overlay Position"
 					variant="outlined"
