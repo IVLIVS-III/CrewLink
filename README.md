@@ -57,7 +57,7 @@ First uninstall the old version.
 
 The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.1.6-m.4.exe
 
-<!-- Use this version together with the modified server version at https://github.com/IVLIVS-III/CrewLink-server/tree/cherry-picked-build-2 -->
+Use this version together with the modified server version at https://github.com/IVLIVS-III/CrewLink-server/tree/1.2.0-m.1
 
 
 <!-- ABOUT THE PROJECT -->
