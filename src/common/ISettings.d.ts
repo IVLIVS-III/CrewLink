@@ -9,6 +9,7 @@ export interface ISettings {
 	muteShortcut: string;
 	hideCode: boolean;
 	enableSpatialAudio: boolean;
+	adjustLiveOnDead: number;
 	haunting: boolean;
 	compactOverlay: boolean;
 	overlayPosition: string;

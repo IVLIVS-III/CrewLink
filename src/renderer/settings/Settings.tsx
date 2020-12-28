@@ -215,6 +215,10 @@ const store = new Store<ISettings>({
 			type: 'boolean',
 			default: true,
 		},
+		adjustLiveOnDead: {
+			type: 'number',
+			default: 1,
+		},
 		haunting: {
 			type: 'boolean',
 			default: true,
@@ -296,7 +300,7 @@ interface MediaDevice {
 
 function validateServerUrl(uri: string): boolean {
 	try {
-		let trimmedUri = uri.trim();
+		const trimmedUri = uri.trim();
 		if (!isHttpUri(trimmedUri) && !isHttpsUri(trimmedUri)) return false;
 		const url = new URL(trimmedUri);
 		if (url.hostname === 'discord.gg') return false;
@@ -752,6 +756,22 @@ const Settings: React.FC<SettingsProps> = function ({
 						});
 					}}
 					control={<Checkbox />}
+				/>
+				<Typography gutterBottom>
+					Live Players Vol. when Dead: {settings.adjustLiveOnDead * 100}
+				</Typography>
+				<Slider
+					disabled={!canChangeLobbySettings}
+					value={settings.adjustLiveOnDead * 100}
+					min={0}
+					max={100}
+					step={1}
+					onChange={(_, newValue: number | number[]) => {
+						setSettings({
+							type: 'setOne',
+							action: ['adjustLiveOnDead', (newValue as number) / 100],
+						});
+					}}
 				/>
 				<Divider />
 				<Typography variant="h6">Overlay</Typography>

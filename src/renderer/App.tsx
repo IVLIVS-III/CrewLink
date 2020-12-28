@@ -129,6 +129,7 @@ export default function App() {
 		muteShortcut: 'RAlt',
 		hideCode: false,
 		enableSpatialAudio: true,
+		adjustLiveOnDead: 1,
 		haunting: true,
 		compactOverlay: false,
 		overlayPosition: 'top',

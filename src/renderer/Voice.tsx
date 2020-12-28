@@ -143,6 +143,12 @@ function calculateVoiceAudio(
 	} else {
 		gain.gain.value = 0;
 	}
+
+	// Dead players hear living players at a specified volume
+	if (me.isDead && !other.isDead) {
+		gain.gain.value = settings.adjustLiveOnDead;
+	}
+
 	if (
 		gain.gain.value > 0 &&
 		Math.sqrt(Math.pow(panPos[0], 2) + Math.pow(panPos[1], 2)) > 7
