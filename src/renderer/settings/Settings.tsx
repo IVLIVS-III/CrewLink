@@ -758,10 +758,10 @@ const Settings: React.FC<SettingsProps> = function ({
 					control={<Checkbox />}
 				/>
 				<Typography gutterBottom>
-					Live Players Vol. when Dead: {settings.adjustLiveOnDead * 100}
+					Live Players Vol. when Dead: {''}
+					{Math.round(settings.adjustLiveOnDead * 100)}
 				</Typography>
 				<Slider
-					disabled={!canChangeLobbySettings}
 					value={settings.adjustLiveOnDead * 100}
 					min={0}
 					max={100}
