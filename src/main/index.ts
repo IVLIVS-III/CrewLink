@@ -76,7 +76,7 @@ function createMainWindow() {
 				protocol: 'file',
 				query: {
 					version: autoUpdater.currentVersion.version,
-					view: "app",
+					view: 'app',
 				},
 				slashes: true,
 			})
@@ -108,26 +108,38 @@ if (!gotTheLock) {
 } else {
 	autoUpdater.checkForUpdates();
 	autoUpdater.on('update-available', () => {
-		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-			state: 'available',
-		});
+		global.mainWindow?.webContents.send(
+			IpcRendererMessages.AUTO_UPDATER_STATE,
+			{
+				state: 'available',
+			}
+		);
 	});
 	autoUpdater.on('error', (err: string) => {
-		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-			state: 'error',
-			error: err,
-		});
+		global.mainWindow?.webContents.send(
+			IpcRendererMessages.AUTO_UPDATER_STATE,
+			{
+				state: 'error',
+				error: err,
+			}
+		);
 	});
 	autoUpdater.on('download-progress', (progress: ProgressInfo) => {
-		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-			state: 'downloading',
-			progress,
-		});
+		global.mainWindow?.webContents.send(
+			IpcRendererMessages.AUTO_UPDATER_STATE,
+			{
+				state: 'downloading',
+				progress,
+			}
+		);
 	});
 	autoUpdater.on('update-downloaded', () => {
-		global.mainWindow?.webContents.send(IpcRendererMessages.AUTO_UPDATER_STATE, {
-			state: 'downloaded',
-		});
+		global.mainWindow?.webContents.send(
+			IpcRendererMessages.AUTO_UPDATER_STATE,
+			{
+				state: 'downloaded',
+			}
+		);
 		app.relaunch();
 		autoUpdater.quitAndInstall();
 	});
