@@ -50,6 +50,7 @@ This branch includes some PRs of the original that haven't been merged yet. Thes
 * (new) #353: Muffling vents (https://github.com/ottomated/CrewLink/pull/353)
 * (new) #288: Adds ability for imposters within a vent to hear other imposters in vents (https://github.com/ottomated/CrewLink/pull/288)
 * (new) #149: Add support for TURN server and allow configurable STUN server (https://github.com/ottomated/CrewLink/pull/149)
+* (new) #355: Add Server URL to main screen for subtle visual cue (https://github.com/ottomated/CrewLink/pull/355)
 
 
 ### Installing the modified version
