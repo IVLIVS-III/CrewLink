@@ -44,6 +44,7 @@ interface AudioElements {
 		element: HTMLAudioElement;
 		gain: GainNode;
 		pan: PannerNode;
+		muffle: BiquadFilterNode;
 		reverbGain: GainNode;
 		reverb: ConvolverNode;
 		compressor: DynamicsCompressorNode;
@@ -90,6 +91,7 @@ function calculateVoiceAudio(
 	other: Player,
 	gain: GainNode,
 	pan: PannerNode,
+	muffle: BiquadFilterNode,
 	reverbGain: GainNode
 ): void {
 	const audioContext = pan.context;
@@ -129,6 +131,7 @@ function calculateVoiceAudio(
 		gain.gain.value = 0;
 		return;
 	}
+
 	if (
 		state.gameState === GameState.LOBBY ||
 		state.gameState === GameState.DISCUSSION
@@ -155,6 +158,18 @@ function calculateVoiceAudio(
 	) {
 		gain.gain.value = 0;
 	}
+
+	if (me.inVent) {
+		// Enable muffle
+		muffle.frequency.value = 400;
+		muffle.Q.value = 20;
+		if (gain.gain.value > 0.7) gain.gain.value *= 0.7; // Too loud at 1
+	} else {
+		// Disable muffle
+		muffle.frequency.value = 20000;
+		muffle.Q.value = 0;
+	}
+
 	// Living impostors hear ghosts at a faint volume
 	if (
 		gain.gain.value > 0 &&
@@ -280,6 +295,7 @@ const Voice: React.FC<VoiceProps> = function ({
 			document.body.removeChild(audioElements.current[peer].element);
 			audioElements.current[peer].pan.disconnect();
 			audioElements.current[peer].gain.disconnect();
+			audioElements.current[peer].muffle.disconnect();
 			if (audioElements.current[peer].reverbGain != null)
 				audioElements.current[peer].reverbGain.disconnect();
 			if (audioElements.current[peer].reverb != null)
@@ -519,15 +535,20 @@ const Voice: React.FC<VoiceProps> = function ({
 						const source = context.createMediaStreamSource(stream);
 						const gain = context.createGain();
 						const pan = context.createPanner();
+						const muffle = context.createBiquadFilter();
 						const compressor = context.createDynamicsCompressor();
+
 						pan.refDistance = 0.1;
 						pan.panningModel = 'equalpower';
 						pan.distanceModel = 'linear';
 						pan.maxDistance = lobbySettingsRef.current.maxDistance;
 						pan.rolloffFactor = 1;
 
+						muffle.type = 'lowpass';
+
 						source.connect(pan);
-						pan.connect(gain);
+						pan.connect(muffle);
+						muffle.connect(gain);
 						gain.connect(compressor);
 
 						let reverb: any = null;
@@ -552,7 +573,7 @@ const Voice: React.FC<VoiceProps> = function ({
 							reverb.connect(compressor);
 						}
 
-						// Source -> pan -> gain -> [if haunting: -> reverbGain -> reverb] -> compressor -> VAD -> destination
+						// Source -> pan -> muffle -> gain -> [if haunting: -> reverbGain -> reverb] -> compressor -> VAD -> destination
 						VAD(context, compressor, context.destination, {
 							onVoiceStart: () => setTalking(true),
 							onVoiceStop: () => setTalking(false),
@@ -586,6 +607,7 @@ const Voice: React.FC<VoiceProps> = function ({
 							element: audio,
 							gain,
 							pan,
+							muffle,
 							reverbGain,
 							reverb,
 							compressor,
@@ -714,6 +736,7 @@ const Voice: React.FC<VoiceProps> = function ({
 					player,
 					audio.gain,
 					audio.pan,
+					audio.muffle,
 					audio.reverbGain
 				);
 				if (connectionStuff.current.deafened) {
