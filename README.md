@@ -53,9 +53,11 @@ This branch includes some PRs of the original that haven't been merged yet. Thes
 
 
 ### Installing the modified version
+<!--
 First uninstall the old version.
 
-The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.1.6-m.4.exe
+The installer can be downloaded from https://storage.googleapis.com/crewlink-ivlivs.appspot.com/CrewLink%20Setup%201.2.0-m.1.exe
+-->
 
 Use this version together with the modified server version at https://github.com/IVLIVS-III/CrewLink-server/tree/1.2.0-m.1
 
