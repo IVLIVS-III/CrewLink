@@ -742,7 +742,7 @@ const Settings: React.FC<SettingsProps> = function ({
 					control={<Checkbox />}
 				/>
 				<FormControlLabel
-					label="Impostors Hear Ghosts"
+					label="Enable Haunting"
 					checked={settings.haunting}
 					onChange={(_, checked: boolean) => {
 						setSettings({
@@ -752,6 +752,8 @@ const Settings: React.FC<SettingsProps> = function ({
 					}}
 					control={<Checkbox />}
 				/>
+				<Divider />
+				<Typography variant="h6">Overlay</Typography>
 				<TextField
 					fullWidth
 					select
@@ -795,6 +797,7 @@ const Settings: React.FC<SettingsProps> = function ({
 					}}
 					control={<Checkbox />}
 				/>
+				<Divider />
 				<URLInput
 					initialURL={settings.serverURL}
 					onValidURL={(url: string) => {
