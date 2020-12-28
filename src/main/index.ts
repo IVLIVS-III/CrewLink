@@ -87,7 +87,7 @@ function createMainWindow() {
 	window.on('closed', () => {
 		global.mainWindow = null;
 		if (global.overlay != null) {
-			global.overlay.close()
+			global.overlay.close();
 			global.overlay = null;
 		}
 	});
@@ -180,6 +180,7 @@ if (!gotTheLock) {
 		}
 	});
 
+	// eslint-disable-next-line no-inner-declarations
 	function createOverlay() {
 		const overlay = new BrowserWindow({
 			width: 400,
@@ -187,26 +188,30 @@ if (!gotTheLock) {
 			webPreferences: {
 				nodeIntegration: true,
 				enableRemoteModule: true,
-				webSecurity: false
+				webSecurity: false,
 			},
-			...overlayWindow.WINDOW_OPTS
+			...overlayWindow.WINDOW_OPTS,
 		});
 
 		if (isDevelopment) {
-			overlay.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=${autoUpdater.currentVersion.version}&view=overlay`)
+			overlay.loadURL(
+				`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=DEV&view=overlay`
+			);
 		} else {
-			overlay.loadURL(formatUrl({
-				pathname: joinPath(__dirname, 'index.html'),
-				protocol: 'file',
-				query: {
-					version: autoUpdater.currentVersion.version,
-					view: "overlay"
-				},
-				slashes: true
-			}))
+			overlay.loadURL(
+				formatUrl({
+					pathname: joinPath(__dirname, 'index.html'),
+					protocol: 'file',
+					query: {
+						version: autoUpdater.currentVersion.version,
+						view: 'overlay',
+					},
+					slashes: true,
+				})
+			);
 		}
 		overlay.setIgnoreMouseEvents(true);
-		overlayWindow.attachTo(overlay, 'Among Us')
+		overlayWindow.attachTo(overlay, 'Among Us');
 
 		return overlay;
 	}
@@ -216,7 +221,7 @@ if (!gotTheLock) {
 		// on macOS it is common for applications to stay open until the user explicitly quits
 		if (process.platform !== 'darwin') {
 			if (global.overlay != null) {
-				global.overlay.close()
+				global.overlay.close();
 				global.overlay = null;
 			}
 			app.quit();
@@ -227,6 +232,7 @@ if (!gotTheLock) {
 		// on macOS it is common to re-create a window even after all windows have been closed
 		if (global.mainWindow === null) {
 			global.mainWindow = createMainWindow();
+			global.overlay = createOverlay();
 		}
 	});
 

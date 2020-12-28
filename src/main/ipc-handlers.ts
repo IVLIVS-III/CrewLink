@@ -51,6 +51,10 @@ export const initializeIpcListeners = (): void => {
 	});
 
 	ipcMain.on(IpcMessages.QUIT_CREWLINK, () => {
+		if (global.overlay != null) {
+			global.overlay.close();
+			global.overlay = null;
+		}
 		for (const win of BrowserWindow.getAllWindows()) {
 			win.close();
 		}
