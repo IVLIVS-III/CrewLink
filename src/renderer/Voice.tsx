@@ -419,6 +419,7 @@ const Voice: React.FC<VoiceProps> = function ({
 
 		let iceConfig: RTCConfiguration = DEFAULT_ICE_CONFIG;
 		socket.on('clientPeerConfig', (clientPeerConfig: ClientPeerConfig) => {
+			console.log('clientPeerConfig: ', clientPeerConfig);
 			if (!validateClientPeerConfig(clientPeerConfig)) {
 				let errorsFormatted = '';
 				if (validateClientPeerConfig.errors) {
