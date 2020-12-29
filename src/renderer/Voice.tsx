@@ -40,6 +40,10 @@ type PeerErrorCode =
 	| 'ERR_DATA_CHANNEL'
 	| 'ERR_CONNECTION_FAILURE';
 
+interface PeerError extends Error {
+	code: PeerErrorCode;
+}
+
 interface AudioElements {
 	[peer: string]: {
 		element: HTMLAudioElement;
@@ -318,12 +322,14 @@ const Voice: React.FC<VoiceProps> = function ({
 			document.body.removeChild(audioElements.current[peer].element);
 			audioElements.current[peer].pan.disconnect();
 			audioElements.current[peer].gain.disconnect();
-			audioElements.current[peer].muffle.disconnect();
+			if (audioElements.current[peer].muffle != null)
+				audioElements.current[peer].muffle.disconnect();
 			if (audioElements.current[peer].reverbGain != null)
 				audioElements.current[peer].reverbGain.disconnect();
 			if (audioElements.current[peer].reverb != null)
 				audioElements.current[peer].reverb.disconnect();
-			audioElements.current[peer].compressor.disconnect();
+			if (audioElements.current[peer].compressor != null)
+				audioElements.current[peer].compressor.disconnect();
 			delete audioElements.current[peer];
 		}
 	}
@@ -405,15 +411,18 @@ const Voice: React.FC<VoiceProps> = function ({
 		const { socket } = connectionStuff.current;
 
 		socket.on('error', (error: SocketError) => {
+			console.log('Error: ', error);
 			if (error.message) {
 				setError(error.message);
 			}
 		});
 		socket.on('connect', () => {
+			console.log('connect');
 			setConnected(true);
 		});
 
 		socket.on('disconnect', () => {
+			console.log('disconnect');
 			setConnected(false);
 		});
 
@@ -529,7 +538,6 @@ const Voice: React.FC<VoiceProps> = function ({
 					clientId: number
 				) => {
 					console.log('Connect called', lobbyCode, playerId, clientId);
-					socket.emit('leave');
 
 					const overlay = remote.getGlobal('overlay');
 					if (overlay) {
@@ -546,6 +554,7 @@ const Voice: React.FC<VoiceProps> = function ({
 						setSocketClients({});
 						currentLobby = lobbyCode;
 					} else if (currentLobby !== lobbyCode) {
+						// Only emit join on lobby change, this will keep the current connections alive at the end of the current game
 						socket.emit('join', lobbyCode, playerId, clientId);
 						currentLobby = lobbyCode;
 					}
@@ -565,15 +574,24 @@ const Voice: React.FC<VoiceProps> = function ({
 					let errCode: PeerErrorCode;
 
 					connection.on('connect', () => {
+						console.log('connect peer connection');
 						if (gameState.isHost) {
+							console.log('A');
 							try {
+								console.log('B');
 								connection.send(JSON.stringify(lobbySettingsRef.current));
+								console.log('C');
 							} catch (e) {
+								console.log('D');
 								console.warn('failed to update lobby settings: ', e);
+								console.log('E');
 							}
+							console.log('F');
 						}
+						console.log('G');
 					});
 					connection.on('stream', (stream: MediaStream) => {
+						console.log('stream peer connection: ', stream);
 						setAudioConnected((old) => ({ ...old, [peer]: true }));
 						const audio = document.createElement(
 							'audio'
@@ -666,12 +684,14 @@ const Voice: React.FC<VoiceProps> = function ({
 						};
 					});
 					connection.on('signal', (data) => {
+						console.log('signal peer connection: ', data);
 						socket.emit('signal', {
 							data,
 							to: peer,
 						});
 					});
 					connection.on('data', (data) => {
+						console.log('data peer connection: ', data);
 						if (gameState.hostId !== socketClientsRef.current[peer].clientId)
 							return;
 						const settings = JSON.parse(data);
@@ -700,9 +720,15 @@ const Voice: React.FC<VoiceProps> = function ({
 							retries++;
 						}
 					});
+
+					connection.on('error', (err: PeerError) => {
+						errCode = err.code;
+					});
+
 					return connection;
 				}
 				socket.on('join', async (peer: string, client: Client) => {
+					console.log('join: ', peer, client);
 					createPeerConnection(peer, true);
 					setSocketClients((old) => ({ ...old, [peer]: client }));
 				});
