@@ -12,10 +12,6 @@ interface OtherDead {
 	[playerId: number]: boolean;
 }
 
-interface AudioConnected {
-	[peer: string]: boolean; // isConnected
-}
-
 interface SocketIdMap {
 	[socketId: string]: number;
 }
@@ -28,7 +24,6 @@ export default function Overlay() {
 	const [talking, setTalking] = useState(false);
 	const [otherTalking, setOtherTalking] = useState<OtherTalking>({});
 	const [otherDead, setOtherDead] = useState<OtherDead>({});
-	const [audioConnected] = useState<AudioConnected>({});
 	const myPlayer = useMemo(() => {
 		if (!gameState || !gameState.players) return undefined;
 		else return gameState.players.find((p) => p.isLocal);
@@ -220,7 +215,6 @@ export default function Overlay() {
 		playerArea = (
 			<div className="otherplayers" style={playersCSS}>
 				{playerList.map((player) => {
-					const peer = playerSocketIds[player.id];
 					const connected =
 						Object.values(socketPlayerIds).includes(player.id) ||
 						player.isLocal;
@@ -229,19 +223,12 @@ export default function Overlay() {
 							<small>{player.name}</small>
 						</span>
 					);
-					const audio = audioConnected[peer];
 					return (
 						<div key={player.id} style={{ width: '60px', textAlign: 'center' }}>
 							<div style={{ paddingLeft: '5px' }}>
 								<Avatar
 									key={player.id}
-									connectionState={
-										!connected
-											? 'disconnected'
-											: audio || player.isLocal
-												? 'connected'
-												: 'novoice'
-									}
+									connectionState={!connected ? 'disconnected' : 'connected'}
 									player={player}
 									talking={
 										!connected ||
