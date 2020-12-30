@@ -10,6 +10,7 @@ export interface ISettings {
 	hideCode: boolean;
 	enableSpatialAudio: boolean;
 	localLobbySettings: ILobbySettings;
+	hideVoiceServer: boolean;
 }
 
 export interface ILobbySettings {

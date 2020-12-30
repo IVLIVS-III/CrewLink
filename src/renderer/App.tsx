@@ -133,6 +133,7 @@ function App() {
 		localLobbySettings: {
 			maxDistance: 5.32,
 		},
+		hideVoiceServer: false,
 	});
 	const lobbySettings = useReducer(
 		lobbySettingsReducer,
