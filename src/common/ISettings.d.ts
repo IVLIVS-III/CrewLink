@@ -10,6 +10,8 @@ export interface ISettings {
 	hideCode: boolean;
 	enableSpatialAudio: boolean;
 	localLobbySettings: ILobbySettings;
+	compactOverlay: boolean;
+	overlayPosition: string;
 }
 
 export interface ILobbySettings {

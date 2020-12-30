@@ -8,7 +8,7 @@ import {
 } from './contexts';
 import { AmongUsState, GameState, Player } from '../common/AmongUsState';
 import Peer from 'simple-peer';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import VAD from './vad';
 import { ISettings } from '../common/ISettings';
 import { IpcRendererMessages } from '../common/ipc-messages';
@@ -376,8 +376,20 @@ const Voice: React.FC<VoiceProps> = function ({
 				const ac = new AudioContext();
 				ac.createMediaStreamSource(stream);
 				audioListener = VAD(ac, ac.createMediaStreamSource(stream), undefined, {
-					onVoiceStart: () => setTalking(true),
-					onVoiceStop: () => setTalking(false),
+					onVoiceStart: () => {
+						setTalking(true);
+						const overlay = remote.getGlobal('overlay');
+						if (overlay) {
+							overlay.webContents.send('overlayTalkingSelf', true);
+						}
+					},
+					onVoiceStop: () => {
+						setTalking(false);
+						const overlay = remote.getGlobal('overlay');
+						if (overlay) {
+							overlay.webContents.send('overlayTalkingSelf', false);
+						}
+					},
 					noiseCaptureDuration: 1,
 					stereo: false,
 				});
@@ -390,6 +402,15 @@ const Voice: React.FC<VoiceProps> = function ({
 					clientId: number
 				) => {
 					console.log('Connect called', lobbyCode, playerId, clientId);
+
+					const overlay = remote.getGlobal('overlay');
+					if (overlay) {
+						overlay.webContents.send(
+							'overlayState',
+							lobbyCode === 'MENU' ? 'MENU' : 'VOICE'
+						);
+					}
+
 					if (lobbyCode === 'MENU') {
 						Object.keys(peerConnections).forEach((k) => {
 							disconnectPeer(k);
@@ -465,6 +486,22 @@ const Voice: React.FC<VoiceProps> = function ({
 								[socketClientsRef.current[peer].playerId]:
 									talking && gain.gain.value > 0,
 							}));
+
+							const overlay = remote.getGlobal('overlay');
+							if (overlay) {
+								const reallyTalking = talking && gain.gain.value > 0;
+								overlay.webContents.send(
+									reallyTalking ? 'overlayTalking' : 'overlayNotTalking',
+									socketClientsRef.current[peer].playerId
+								);
+								const socketPlayerIds: {
+									[socketId: string]: number;
+								} = {};
+								for (const k of Object.keys(socketClientsRef.current)) {
+									socketPlayerIds[k] = socketClientsRef.current[k].playerId;
+								}
+								overlay.webContents.send('overlaySocketIds', socketPlayerIds);
+							}
 						};
 						audioElements.current[peer] = { element: audio, gain, pan };
 					});
@@ -573,6 +610,14 @@ const Voice: React.FC<VoiceProps> = function ({
 		for (const k of Object.keys(socketClients)) {
 			playerSocketIds[socketClients[k].playerId] = k;
 		}
+		const overlay = remote.getGlobal('overlay');
+		const socketPlayerIds: {
+			[socketId: string]: number;
+		} = {};
+		for (const k of Object.keys(socketClientsRef.current)) {
+			socketPlayerIds[k] = socketClientsRef.current[k].playerId;
+		}
+		if (overlay) overlay.webContents.send('overlaySocketIds', socketPlayerIds);
 		for (const player of otherPlayers) {
 			const audio = audioElements.current[playerSocketIds[player.id]];
 			if (audio) {
