@@ -136,6 +136,7 @@ export default function App() {
 		compactOverlay: false,
 		overlayPosition: 'top',
 		adjustLiveOnDead: 1,
+		hideVoiceServer: false,
 	});
 	const lobbySettings = useReducer(
 		lobbySettingsReducer,

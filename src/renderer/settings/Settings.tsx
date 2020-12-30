@@ -244,6 +244,10 @@ const store = new Store<ISettings>({
 			type: 'number',
 			default: 1,
 		},
+		hideVoiceServer: {
+			type: 'boolean',
+			default: false,
+		},
 	},
 });
 
@@ -759,6 +763,17 @@ const Settings: React.FC<SettingsProps> = function ({
 						setSettings({
 							type: 'setOne',
 							action: ['hideCode', !checked],
+						});
+					}}
+					control={<Checkbox />}
+				/>
+				<FormControlLabel
+					label="Show Voice Server"
+					checked={!settings.hideVoiceServer}
+					onChange={(_, checked: boolean) => {
+						setSettings({
+							type: 'setOne',
+							action: ['hideVoiceServer', !checked],
 						});
 					}}
 					control={<Checkbox />}

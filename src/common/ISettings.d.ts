@@ -13,6 +13,7 @@ export interface ISettings {
 	compactOverlay: boolean;
 	overlayPosition: string;
 	adjustLiveOnDead: number;
+	hideVoiceServer: boolean;
 }
 
 export interface ILobbySettings {
