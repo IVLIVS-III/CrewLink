@@ -43,6 +43,7 @@ interface AudioElements {
 		element: HTMLAudioElement;
 		gain: GainNode;
 		pan: PannerNode;
+		muffle: BiquadFilterNode;
 	};
 }
 
@@ -85,7 +86,8 @@ function calculateVoiceAudio(
 	me: Player,
 	other: Player,
 	gain: GainNode,
-	pan: PannerNode
+	pan: PannerNode,
+	muffle: BiquadFilterNode
 ): void {
 	const audioContext = pan.context;
 	pan.positionZ.setValueAtTime(-0.5, audioContext.currentTime);
@@ -129,10 +131,21 @@ function calculateVoiceAudio(
 		gain.gain.value = 0;
 	}
 	if (
-		gain.gain.value === 1 &&
+		gain.gain.value > 0 &&
 		Math.sqrt(Math.pow(panPos[0], 2) + Math.pow(panPos[1], 2)) > 7
 	) {
 		gain.gain.value = 0;
+	}
+
+	if (me.inVent) {
+		// Enable muffle
+		muffle.frequency.value = 400;
+		muffle.Q.value = 20;
+		if (gain.gain.value > 0.7) gain.gain.value = 0.7; // Too loud at 1
+	} else {
+		// Disable muffle
+		muffle.frequency.value = 20000;
+		muffle.Q.value = 0;
 	}
 }
 
@@ -238,6 +251,7 @@ const Voice: React.FC<VoiceProps> = function ({
 		if (audioElements.current[peer]) {
 			document.body.removeChild(audioElements.current[peer].element);
 			audioElements.current[peer].pan.disconnect();
+			audioElements.current[peer].muffle.disconnect();
 			audioElements.current[peer].gain.disconnect();
 			delete audioElements.current[peer];
 		}
@@ -444,15 +458,21 @@ const Voice: React.FC<VoiceProps> = function ({
 						const source = context.createMediaStreamSource(stream);
 						const gain = context.createGain();
 						const pan = context.createPanner();
+						const muffle = context.createBiquadFilter();
+
 						pan.refDistance = 0.1;
 						pan.panningModel = 'equalpower';
 						pan.distanceModel = 'linear';
 						pan.maxDistance = lobbySettingsRef.current.maxDistance;
 						pan.rolloffFactor = 1;
 
+						muffle.type = 'lowpass';
+
 						source.connect(pan);
-						pan.connect(gain);
-						// Source -> pan -> gain -> VAD -> destination
+						pan.connect(muffle);
+						muffle.connect(gain);
+
+						// Source -> pan -> muffle -> gain -> VAD -> destination
 						VAD(context, gain, context.destination, {
 							onVoiceStart: () => setTalking(true),
 							onVoiceStop: () => setTalking(false),
@@ -466,7 +486,7 @@ const Voice: React.FC<VoiceProps> = function ({
 									talking && gain.gain.value > 0,
 							}));
 						};
-						audioElements.current[peer] = { element: audio, gain, pan };
+						audioElements.current[peer] = { element: audio, gain, pan, muffle };
 					});
 					connection.on('signal', (data) => {
 						socket.emit('signal', {
@@ -582,7 +602,8 @@ const Voice: React.FC<VoiceProps> = function ({
 					myPlayer,
 					player,
 					audio.gain,
-					audio.pan
+					audio.pan,
+					audio.muffle
 				);
 				if (connectionStuff.current.deafened) {
 					audio.gain.gain.value = 0;
