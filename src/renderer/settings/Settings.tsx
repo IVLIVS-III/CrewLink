@@ -557,8 +557,8 @@ const Settings: React.FC<SettingsProps> = function ({
 			</div>
 			<div className={classes.scroll}>
 				{/* Lobby Settings */}
+				<Typography variant="h6">Lobby Settings</Typography>
 				<div>
-					<Typography variant="h6">Lobby Settings</Typography>
 					<Typography gutterBottom>
 						Voice Distance:{' '}
 						{canChangeLobbySettings ? localDistance : lobbySettings.maxDistance}
@@ -598,6 +598,8 @@ const Settings: React.FC<SettingsProps> = function ({
 							}}
 						/>
 					</DisabledTooltip>
+				</div>
+				<div>
 					<DisabledTooltip
 						disabled={!canChangeLobbySettings}
 						title={
