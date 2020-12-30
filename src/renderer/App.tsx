@@ -135,6 +135,7 @@ export default function App() {
 		},
 		compactOverlay: false,
 		overlayPosition: 'top',
+		adjustLiveOnDead: 1,
 	});
 	const lobbySettings = useReducer(
 		lobbySettingsReducer,

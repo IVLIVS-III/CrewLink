@@ -12,6 +12,7 @@ export interface ISettings {
 	localLobbySettings: ILobbySettings;
 	compactOverlay: boolean;
 	overlayPosition: string;
+	adjustLiveOnDead: number;
 }
 
 export interface ILobbySettings {
