@@ -5,7 +5,6 @@ import React, {
 	useReducer,
 	useState,
 } from 'react';
-// del import ReactDOM from 'react-dom';
 import Voice from './Voice';
 import Menu from './Menu';
 import { ipcRenderer, remote } from 'electron';
@@ -264,5 +263,3 @@ export default function App() {
 		</GameStateContext.Provider>
 	);
 }
-
-// del ReactDOM.render(<App />, document.getElementById('app'));
