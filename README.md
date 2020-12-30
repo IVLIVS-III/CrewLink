@@ -50,8 +50,8 @@ This branch includes some PRs of the original that haven't been merged yet. Thes
 * (new) [#376](https://github.com/ottomated/CrewLink/pull/376): Allow Users To Adjust Live Player Volumes While Dead
 * (new) [#353](https://github.com/ottomated/CrewLink/pull/353): Muffling vents
 * (new) [#288](https://github.com/ottomated/CrewLink/pull/288): Adds ability for imposters within a vent to hear other imposters in vents
-* (new) [#149](https://github.com/ottomated/CrewLink/pull/149): Add support for TURN server and allow configurable STUN server
 * (new) [#355](https://github.com/ottomated/CrewLink/pull/355): Add Server URL to main screen for subtle visual cue
+* (new) [#149](https://github.com/ottomated/CrewLink/pull/149): Add support for TURN server and allow configurable STUN server
 
 
 ### Installing the modified version
