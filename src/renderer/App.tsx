@@ -132,6 +132,7 @@ function App() {
 		enableSpatialAudio: true,
 		localLobbySettings: {
 			maxDistance: 5.32,
+			haunting: true,
 		},
 	});
 	const lobbySettings = useReducer(

@@ -221,9 +221,14 @@ const store = new Store<ISettings>({
 					type: 'number',
 					default: 5.32,
 				},
+				haunting: {
+					type: 'boolean',
+					default: true,
+				},
 			},
 			default: {
 				maxDistance: 5.32,
+				haunting: true,
 			},
 		},
 	},
@@ -573,6 +578,32 @@ const Settings: React.FC<SettingsProps> = function ({
 									});
 								}
 							}}
+						/>
+					</DisabledTooltip>
+					<DisabledTooltip
+						disabled={!canChangeLobbySettings}
+						title={
+							isInMenuOrLobby
+								? 'Only the game host can change this!'
+								: 'You can only change this in the lobby!'
+						}
+					>
+						<FormControlLabel
+							label="Enable Haunting"
+							checked={lobbySettings.haunting}
+							onChange={(_, checked: boolean) => {
+								setSettings({
+									type: 'setLobbySetting',
+									action: ['haunting', checked],
+								});
+								if (gameState?.isHost) {
+									setLobbySettings({
+										type: 'setOne',
+										action: ['haunting', checked],
+									});
+								}
+							}}
+							control={<Checkbox />}
 						/>
 					</DisabledTooltip>
 				</div>

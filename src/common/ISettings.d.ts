@@ -14,4 +14,5 @@ export interface ISettings {
 
 export interface ILobbySettings {
 	maxDistance: number;
+	haunting: boolean;
 }
