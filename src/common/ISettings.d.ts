@@ -10,6 +10,7 @@ export interface ISettings {
 	hideCode: boolean;
 	enableSpatialAudio: boolean;
 	localLobbySettings: ILobbySettings;
+	adjustLiveOnDead: number;
 }
 
 export interface ILobbySettings {

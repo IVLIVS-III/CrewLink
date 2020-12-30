@@ -133,6 +133,7 @@ function App() {
 		localLobbySettings: {
 			maxDistance: 5.32,
 		},
+		adjustLiveOnDead: 1,
 	});
 	const lobbySettings = useReducer(
 		lobbySettingsReducer,
