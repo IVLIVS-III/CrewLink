@@ -54,6 +54,10 @@ export const initializeIpcListeners = (): void => {
 		for (const win of BrowserWindow.getAllWindows()) {
 			win.close();
 		}
+		if (global.overlay != null) {
+			global.overlay.close();
+			global.overlay = null;
+		}
 		app.quit();
 	});
 };

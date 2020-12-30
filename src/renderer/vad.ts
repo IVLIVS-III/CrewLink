@@ -19,13 +19,13 @@ function clamp(value: number, min: number, max: number): number {
 		? value < min
 			? min
 			: value > max
-			? max
-			: value
+				? max
+				: value
 		: value < max
-		? max
-		: value > min
-		? min
-		: value;
+			? max
+			: value > min
+				? min
+				: value;
 }
 
 // https://github.com/Jam3/audio-frequency-to-index
@@ -139,8 +139,8 @@ export default function (
 			.sort();
 		const averageEnvFreq = envFreqRange.length
 			? envFreqRange.reduce(function (p, c) {
-					return Math.min(p, c);
-			  }, 1)
+				return Math.min(p, c);
+			}, 1)
 			: options.minNoiseLevel || 0.1;
 
 		baseLevel = averageEnvFreq * options.avgNoiseMultiplier;
