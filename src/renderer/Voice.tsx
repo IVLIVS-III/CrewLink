@@ -182,7 +182,7 @@ function calculateVoiceAudio(
 		other.isDead &&
 		settings.localLobbySettings.haunting
 	) {
-		gain.gain.value = gain.gain.value * 0.1;
+		gain.gain.value = gain.gain.value * 0.05;
 		if (reverbGain != null) reverbGain.gain.value = 1;
 	}
 }
