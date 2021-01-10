@@ -116,8 +116,12 @@ function calculateVoiceAudio(
 			}
 
 			// Mute other players which are in a vent
-			if (other.inVent && !lobbySettings.hearImpostorsInVents) {
-				gain.gain.value = 0;
+			if (other.inVent) {
+				if (me.inVent) {
+					gain.gain.value = 1;
+				} else if (!lobbySettings.hearImpostorsInVents) {
+					gain.gain.value = 0;
+				}
 			}
 
 			// Mute dead players for still living players
