@@ -12,6 +12,7 @@ export interface ISettings {
 	meetingOverlay: boolean;
 	overlayPosition: 'left' | 'right' | 'hidden';
 	localLobbySettings: ILobbySettings;
+	adjustLiveOnDead: number;
 }
 
 export interface ILobbySettings {

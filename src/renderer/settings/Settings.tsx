@@ -250,6 +250,10 @@ const storeConfig: Store.Options<ISettings> = {
 			enum: ['left', 'right', 'hidden'],
 			default: 'right',
 		},
+		adjustLiveOnDead: {
+			type: 'number',
+			default: 1,
+		},
 	},
 };
 
@@ -876,6 +880,22 @@ const Settings: React.FC<SettingsProps> = function ({
 						});
 					}}
 					control={<Checkbox />}
+				/>
+				<Typography gutterBottom align="center">
+					Live Players Vol. when Dead: {''}
+					{Math.round(settings.adjustLiveOnDead * 100)}
+				</Typography>
+				<Slider
+					value={settings.adjustLiveOnDead * 100}
+					min={0}
+					max={100}
+					step={1}
+					onChange={(_, newValue: number | number[]) => {
+						setSettings({
+							type: 'setOne',
+							action: ['adjustLiveOnDead', (newValue as number) / 100],
+						});
+					}}
 				/>
 				<URLInput
 					initialURL={settings.serverURL}

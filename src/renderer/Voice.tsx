@@ -137,6 +137,12 @@ function calculateVoiceAudio(
 				reverbGain.gain.value = 1;
 			}
 
+			// Lower alive players for dead players
+			if (me.isDead && !other.isDead) {
+				gain.gain.value = settings.adjustLiveOnDead;
+				return;
+			}
+
 			break;
 		case GameState.DISCUSSION:
 			panPos = [0, 0];
@@ -145,6 +151,12 @@ function calculateVoiceAudio(
 			// Mute dead players for still living players
 			if (!me.isDead && other.isDead) {
 				gain.gain.value = 0;
+			}
+
+			// Lower alive players for dead players
+			if (me.isDead && !other.isDead) {
+				gain.gain.value = settings.adjustLiveOnDead;
+				return;
 			}
 
 			break;

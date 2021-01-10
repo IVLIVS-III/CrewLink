@@ -204,6 +204,7 @@ const App: React.FC = function () {
 			hearImpostorsInVents: false,
 			commsSabotage: true,
 		},
+		adjustLiveOnDead: 1,
 	});
 	const lobbySettings = useReducer(
 		lobbySettingsReducer,
