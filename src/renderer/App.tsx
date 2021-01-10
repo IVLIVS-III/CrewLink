@@ -91,7 +91,7 @@ const TitleBar: React.FC<TitleBarProps> = function ({
 	const classes = useStyles();
 	return (
 		<div className={classes.root}>
-			<span className={classes.title}>CrewLink{appVersion}</span>
+			<span className={classes.title}>CrewLink{appVersion}-m.1</span>
 			<IconButton
 				className={classes.button}
 				style={{ left: 0 }}
@@ -127,7 +127,7 @@ interface ErrorBoundaryState {
 class ErrorBoundary extends React.Component<
 	ErrorBoundaryProps,
 	ErrorBoundaryState
-> {
+	> {
 	constructor(props: ErrorBoundaryProps) {
 		super(props);
 		this.state = {};
